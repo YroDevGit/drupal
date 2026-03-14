@@ -1,0 +1,9 @@
+tfooter-styles:
+  version: 1.0
+  css:
+    theme:
+      css/tfooter.css: {}
+  js:
+    js/tfooter.js: {}
+  dependencies:
+    - core/jquery

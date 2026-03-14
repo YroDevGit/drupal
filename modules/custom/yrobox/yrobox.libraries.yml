@@ -1,0 +1,9 @@
+yrobox-styles:
+  version: 1.0
+  css:
+    theme:
+      css/yrobox.css: {}
+  js:
+    js/yrobox.js: {}
+  dependencies:
+    - core/jquery

@@ -1,0 +1,343 @@
+<?php
+
+
+if (PHP_SAPI !== 'cli') {
+  echo "This script should only be run from the command line.";
+  exit(1);
+}
+
+$arguments = $argv;
+$route = isset($arguments[1]) ? strtolower($arguments[1]) : '';
+$filename = isset($arguments[2]) ? $arguments[2] : '';
+$extra = isset($arguments[3]) ? $arguments[3] : '';
+$exxr = isset($arguments[4]) ? $arguments[4] : '';
+
+if($route == "+cmodule"){
+
+  if(! $filename){
+    echo "Please add name for a module";exit;
+  }
+  $newname = ucfirst($filename);
+  $customPath = "modules/custom/";
+
+  $mpath =$customPath.$filename;
+  if(! is_dir($mpath)){
+    mkdir($mpath);
+  }
+
+  $arr = [
+    "css" => $mpath."/css",
+    "js" => $mpath."/js",
+    "src" => $mpath."/src/Plugin/Block",
+    "templates" => $mpath."/templates"
+  ];
+
+  foreach($arr as $k=>$v){
+    if(! is_dir($v)){
+      @mkdir($v, 0777, true);
+    }
+  }
+
+  $h = ucfirst($filename);
+
+  if(! file_exists($mpath."/".$filename.".info.yml")){
+    $content = <<<EOT
+    name: '$h'
+    type: module
+    description: 'Please edit this description'
+    core_version_requirement: ^10
+    package: Custom
+    dependencies: []
+    EOT;
+
+    if(! file_put_contents($mpath."/".$filename.".info.yml", $content)){
+      echo "Failed to create ".$filename.".info.yml";
+    }
+  }
+
+  if(! file_exists($mpath."/".$filename.".libraries.yml")){
+    $content = <<<EOT
+    $filename-styles:
+      version: 1.0
+      css:
+        theme:
+          css/$filename.css: {}
+      js:
+        js/$filename.js: {}
+      dependencies:
+        - core/jquery
+    EOT;
+
+    if(! file_put_contents($mpath."/".$filename.".libraries.yml", $content)){
+      echo "Failed to create ".$filename.".libraries.yml";
+    }
+  }
+
+  if(! file_exists($mpath."/".$filename.".module")){
+    $themename = $filename."_theme";
+    $content = <<<EOT
+    <?php
+    /**
+     * Implements hook_theme().
+     */
+    function $themename() {
+      return [
+        '$filename' => [
+          'variables' => [
+            'title' => NULL,
+            'description' => NULL,
+          ],
+          'template' => '$filename',
+        ],
+      ];
+    }
+    EOT;
+
+    if(! file_put_contents($mpath."/".$filename.".module", $content)){
+      echo "Failed to create ".$filename.".nodule";
+    }
+  }
+
+  if(! file_exists($mpath."/templates/".$filename.".html.twig")){
+    $content = <<<EOT
+    <div class="">
+      <span class="">{{ title }}</span>
+      <p class="">{{ description }}</p>
+    </div>
+    EOT;
+
+    if(! file_put_contents($mpath."/templates/".$filename.".html.twig", $content)){
+      echo "Failed to create ".$mpath."/templates/".$filename.".html.twig";
+    }
+  }
+
+  if(! file_exists($mpath."/src/Plugin/Block/".$h."Block.php")){
+    $fblock = $filename."_block";
+    $bn = $h."Block";
+    $content = <<<EOT
+    <?php
+    namespace Drupal\\$filename\Plugin\Block;
+
+    use Drupal\Core\Block\BlockBase;
+    use Drupal\Core\Form\FormStateInterface;
+    /**
+     * Provides a '$h' Block.
+     *
+     * @Block(
+     *   id = "$fblock",
+     *   admin_label = @Translation("$h Block"),
+     * )
+     */
+    class $bn extends BlockBase {
+      /**
+       * {@inheritdoc}
+       */
+
+      public function defaultConfiguration() {
+        return [
+          'title' => 'Sample Title',
+          'description' => 'Sample description for YroBox component.',
+        ];
+      }
+
+      /**
+       * {@inheritdoc}
+       */
+      public function blockForm(\$form, FormStateInterface \$form_state) {
+        \$form['title'] = [
+          '#type' => 'textfield',
+          '#title' => \$this->t('Title'),
+          '#default_value' => \$this->configuration['title'],
+        ];
+        \$form['description'] = [
+          '#type' => 'fieldset',
+          '#title' => \$this->t('Description'),
+          '#default_value' => \$this->configuration['description'],
+        ];
+        return \$form;
+      }
+
+      /**
+       * {@inheritdoc}
+       */
+      public function blockSubmit(\$form, FormStateInterface \$form_state) {
+        \$this->configuration['title'] = \$form_state->getValue('title');
+        \$this->configuration['description'] = \$form_state->getValue('description');
+      }
+
+      /**
+       * {@inheritdoc}
+       */
+      public function build() {
+        return [
+          '#theme' => '$filename',
+          '#title' => \$this->configuration['title'],
+          '#description' => \$this->configuration['description'],
+          '#attached' => [
+            'library' => [
+              '$filename/$filename-styles',
+            ],
+          ],
+        ];
+      }
+    }
+    EOT;
+
+
+
+    $content2 = <<<EOT
+    <?php
+    namespace Drupal\\$filename\Plugin\Block;
+
+    use Drupal\Core\Block\BlockBase;
+    use Drupal\Core\Form\FormStateInterface;
+    /**
+     * Provides a '$h' Block.
+     *
+     * @Block(
+     *   id = "$fblock",
+     *   admin_label = @Translation("$h Block"),
+     * )
+     */
+    class $bn extends BlockBase {
+      /**
+       * {@inheritdoc}
+       */
+      public function data(array \$array = [])
+      {
+        \$data["title"] = [
+          "type" => "textfield",
+          "label" => "Title",
+          "default" => "Sample title"
+        ];
+
+        \$data["description"] = [
+          "type" => "textarea",
+          "label" => "Description",
+          "default" => "Sample description for YroBox component."
+        ];
+
+        //Add more here...
+
+        return \$data;
+      }
+
+      /**
+       * {@inheritdoc}
+       */
+      public function defaultConfiguration()
+      {
+        \$data = \$this->data();
+        \$ret = [];
+        foreach (\$data as \$k => \$v) {
+          \$ret[\$k] = \$v["default"] ?? "";
+        }
+
+        return \$ret;
+      }
+
+      /**
+       * {@inheritdoc}
+       */
+      public function blockForm(\$form, FormStateInterface \$form_state)
+      {
+        \$data = \$this->data();
+        \$form = [];
+        foreach (\$data as \$k => \$v) {
+          if(isset(\$v['type']) && \$v['type'] == "submit"){
+            \$form[\$k] = [
+              '#type' => \$v['type'] ?? "submit",
+              '#value' => \$this->t(\$v['label'] ?? \$v['text'] ?? "Submit"),
+            ];
+            if(isset(\$v['limit_validation_errors'])){
+              \$form[\$k]['#limit_validation_errors'] = \$v['limit_validation_errors'];
+            }
+            if(isset(\$v['action']) || isset(\$v['submit']) || isset(\$v['click'])){
+              \$form[\$k]['#submit'] = [[get_class(\$this), \$v['action'] ?? \$v['submit'] ?? \$v['click']]];
+            }
+            continue;
+          }
+          if(isset(\$v['type']) && \$v['type'] == "html"){
+            \$form[\$k] = [
+              '#markup' => \$v['markup'] ?? \$v['tag'] ?? "<hr>",
+            ];
+            continue;
+          }
+          \$form[\$k] = [
+            '#type' => \$v['type'] ?? "textfield",
+            '#title' => \$this->t(\$v['label'] ?? ucfirst(\$k)),
+            '#default_value' => \$this->configuration[\$k],
+          ];
+        }
+        //add something here...
+
+        return \$form;
+      }
+
+      /**
+       * {@inheritdoc}
+       */
+      public function blockSubmit(\$form, FormStateInterface \$form_state)
+      {
+        \$data = \$this->data();
+        foreach (\$data as \$k=>\$v){
+          \$this->configuration[\$k] = \$form_state->getValue(\$k);
+        }
+        //Add something here...
+
+      }
+
+      /**
+       * {@inheritdoc}
+       */
+      public function build()
+      {
+        \$data = \$this->data();
+        \$ret =  [
+          '#theme' => '$filename',
+          '#attached' => [
+            'library' => [
+              '$filename/$filename-styles',
+            ],
+          ],
+        ];
+        foreach(\$data as \$k=>\$v){
+          \$ret["#".\$k] = \$this->configuration[\$k];
+        }
+        return \$ret;
+      }
+    }
+    EOT;
+
+    if($extra=="--plain"){
+      $content2 = $content;
+    }
+    if(! file_put_contents($mpath."/src/Plugin/Block/".$h."Block.php", $content2)){
+      echo "Failed to create ".$mpath."/src/Plugin/Block/".$h."Block.php";
+    }
+  }
+
+  if(! file_exists($mpath."/css/".$filename.".css")){
+    $content = <<<EOT
+    /* $filename css */
+    EOT;
+
+    if(! file_put_contents($mpath."/css/".$filename.".css", $content)){
+      echo "Failed to create ".$mpath."/css/".$filename.".css";
+    }
+  }
+
+  if(! file_exists($mpath."/js/".$filename.".js")){
+    $content = <<<EOT
+    // $filename javascript
+    EOT;
+
+    if(! file_put_contents($mpath."/js/".$filename.".js", $content)){
+      echo "Failed to create ".$mpath."/js/".$filename.".js";
+    }
+  }
+
+
+
+
+}

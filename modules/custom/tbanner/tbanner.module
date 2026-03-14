@@ -1,0 +1,16 @@
+<?php
+/**
+ * Implements hook_theme().
+ */
+function tbanner_theme() {
+  return [
+    'tbanner' => [
+      'variables' => [
+        'title' => NULL,
+        'description' => NULL,
+        'subtitle' => null
+      ],
+      'template' => 'tbanner',
+    ],
+  ];
+}

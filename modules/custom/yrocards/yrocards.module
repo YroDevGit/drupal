@@ -1,0 +1,13 @@
+<?php
+function yrocards_theme() {
+  return [
+    'yrocards' => [
+      'variables' => [
+        'section_title' => NULL,
+        'section_description' => NULL,
+        'items' => [],
+      ],
+      'template' => 'yrocards',
+    ],
+  ];
+}

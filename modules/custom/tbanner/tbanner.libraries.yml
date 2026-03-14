@@ -1,0 +1,9 @@
+tbanner-styles:
+  version: 1.0
+  css:
+    theme:
+      css/tbanner.css: {}
+  js:
+    js/tbanner.js: {}
+  dependencies:
+    - core/jquery

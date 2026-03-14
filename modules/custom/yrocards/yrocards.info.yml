@@ -1,0 +1,6 @@
+name: 'YroCards'
+type: module
+description: 'Custom block component with image, title, description, and view button.'
+core_version_requirement: ^10
+package: Custom
+dependencies: []

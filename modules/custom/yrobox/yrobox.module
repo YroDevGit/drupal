@@ -1,0 +1,18 @@
+<?php
+/**
+ * Implements hook_theme().
+ */
+function yrobox_theme() {
+  return [
+    'yrobox' => [
+      'variables' => [
+        'title' => NULL,
+        'description' => NULL,
+        'image_url' => NULL,
+        'button_text' => NULL,
+        'button_url' => NULL,
+      ],
+      'template' => 'yrobox',
+    ],
+  ];
+}

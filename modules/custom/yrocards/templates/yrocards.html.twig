@@ -1,0 +1,34 @@
+<section class="yrobox-section">
+
+  <div class="yrobox-header">
+    <h2>{{ section_title }}</h2>
+    <p>{{ section_description }}</p>
+  </div>
+
+  <div class="yrobox-cards">
+
+    {% for item in items %}
+      <div class="yrobox">
+
+        {% if item.image_url %}
+          <img src="{{ item.image_url }}" class="yrobox-image" />
+        {% endif %}
+
+        <h3 class="yrobox-title">
+          {{ item.title }}
+        </h3>
+
+        <p class="yrobox-description">
+          {{ item.description }}
+        </p>
+
+        <a href="{{ item.button_url }}" class="yrobox-button">
+          {{ item.button_text }}
+        </a>
+
+      </div>
+    {% endfor %}
+
+  </div>
+
+</section>

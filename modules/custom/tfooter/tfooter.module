@@ -1,0 +1,16 @@
+<?php
+/**
+ * Implements hook_theme().
+ */
+function tfooter_theme() {
+  return [
+    'tfooter' => [
+      'variables' => [
+        'title' => NULL,
+        'description' => NULL,
+        'header' => null
+      ],
+      'template' => 'tfooter',
+    ],
+  ];
+}
