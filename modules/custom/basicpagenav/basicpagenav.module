@@ -1,0 +1,15 @@
+<?php
+/**
+ * Implements hook_theme().
+ */
+function basicpagenav_theme() {
+  return [
+    'basicpagenav' => [
+      'variables' => [
+        'title' => NULL,
+        'description' => NULL,
+      ],
+      'template' => 'basicpagenav',
+    ],
+  ];
+}

@@ -1,0 +1,15 @@
+<?php
+/**
+ * Implements hook_theme().
+ */
+function cta_theme() {
+  return [
+    'cta' => [
+      'variables' => [
+        'title' => NULL,
+        'btn' => NULL,
+      ],
+      'template' => 'cta',
+    ],
+  ];
+}

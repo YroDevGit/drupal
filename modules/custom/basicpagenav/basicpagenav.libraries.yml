@@ -1,0 +1,9 @@
+basicpagenav-styles:
+  version: 1.0
+  css:
+    theme:
+      css/basicpagenav.css: {}
+  js:
+    js/basicpagenav.js: {}
+  dependencies:
+    - core/jquery

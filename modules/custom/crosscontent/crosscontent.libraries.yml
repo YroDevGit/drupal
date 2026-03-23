@@ -1,0 +1,9 @@
+crosscontent-styles:
+  version: 1.0
+  css:
+    theme:
+      css/crosscontent.css: {}
+  js:
+    js/crosscontent.js: {}
+  dependencies:
+    - core/jquery

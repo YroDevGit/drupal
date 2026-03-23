@@ -1,0 +1,9 @@
+accordions-styles:
+  version: 1.0
+  css:
+    theme:
+      css/accordions.css: {}
+  js:
+    js/accordions.js: {}
+  dependencies:
+    - core/jquery

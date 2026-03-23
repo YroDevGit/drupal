@@ -1,0 +1,14 @@
+name: 'Def'
+type: theme
+description: 'Custom Drupal Theme'
+core_version_requirement: ^10
+base theme: false
+
+libraries:
+  - def/global
+
+regions:
+  header: Header
+  menus: Menus
+  content: Content
+  footer: Footer

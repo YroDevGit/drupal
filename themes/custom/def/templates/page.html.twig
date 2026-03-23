@@ -1,0 +1,24 @@
+<!-- navigation bar (clean & simple) -->
+<nav class="navbar navbar-expand-lg bg-white py-3 shadow-sm">
+	<div class="container">
+		<a class="navbar-brand fw-bold text-primary" href="#">⛅ Brand</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+			{% if page.menus %}
+        {{page.menus}}
+      {% endif %}
+
+	</div>
+</nav>
+
+<div class="container py-5">
+	{{page.content}}
+</div>
+
+<!-- simple footer -->
+{{page.footer}}
+
+<!-- Bootstrap JS for accordion & toggles -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

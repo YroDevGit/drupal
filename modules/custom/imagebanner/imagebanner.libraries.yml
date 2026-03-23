@@ -1,0 +1,9 @@
+imagebanner-styles:
+  version: 1.0
+  css:
+    theme:
+      css/imagebanner.css: {}
+  js:
+    js/imagebanner.js: {}
+  dependencies:
+    - core/jquery

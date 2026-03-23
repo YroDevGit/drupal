@@ -1,0 +1,14 @@
+<?php
+/**
+ * Implements hook_theme().
+ */
+function brand_strip_theme() {
+  return [
+    'brand_strip' => [
+      'variables' => [
+        "strips" => []
+      ],
+      'template' => 'brand_strip',
+    ],
+  ];
+}

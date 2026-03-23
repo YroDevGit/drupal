@@ -1,0 +1,17 @@
+<?php
+/**
+ * Implements hook_theme().
+ */
+function accordions_theme() {
+  return [
+    'accordions' => [
+      'variables' => [
+        'title' => NULL,
+        'description' => NULL,
+        "contact" => NULL,
+        "accordions" => []
+      ],
+      'template' => 'accordions',
+    ],
+  ];
+}

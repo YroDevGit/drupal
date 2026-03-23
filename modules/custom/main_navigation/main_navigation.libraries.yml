@@ -1,0 +1,9 @@
+main_navigation-styles:
+  version: 1.0
+  css:
+    theme:
+      css/main_navigation.css: {}
+  js:
+    js/main_navigation.js: {}
+  dependencies:
+    - core/jquery

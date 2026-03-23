@@ -1,0 +1,8 @@
+pages.login:
+  path: '/custom-login'
+  defaults:
+    _controller: '\Drupal\pages\Controller\Login::page'
+    _title: 'Login'
+    _theme: 'olivero'
+  requirements:
+    _permission: 'access content'

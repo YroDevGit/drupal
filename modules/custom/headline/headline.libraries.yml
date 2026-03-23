@@ -1,0 +1,10 @@
+headline-styles:
+  version: 1.0
+  css:
+    theme:
+      css/headline.css: {}
+  js:
+    js/headline.js: {}
+  dependencies:
+    - core/jquery
+    

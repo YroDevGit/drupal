@@ -1,0 +1,42 @@
+<section>
+<div class="container border-top border-bottom border-start-0 border-end-0">
+
+<div class="my-5 pt-4 pb-3">
+    <div class="text-center mb-4">
+      <span class="badge bg-info bg-opacity-10 text-info-emphasis px-3 py-2 rounded-pill">🔄 accordion block</span>
+      <h3 class="fw-bold mt-2">{{title}}</h3>
+      <p class="text-secondary col-md-8 mx-auto">{{description}}</p>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="accordion shadow-sm rounded-4 overflow-hidden" id="faqAccordion">
+          <!-- item 1 -->
+          {% for item, value in accordions %}
+
+            <div class="accordion-item">
+            <h2 class="accordion-header" id="heading{{item}}">
+              <button class="accordion-button fw-semibold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{item}}" aria-expanded="false" aria-controls="collapseOne">
+                {{value.title|t}}
+              </button>
+            </h2>
+            <div id="collapse{{item}}" class="accordion-collapse collapse" aria-labelledby="heading{{item}}" data-bs-parent="#faqAccordion">
+              <div class="accordion-body bg-light">
+                {{value.subtitle|t}}
+              </div>
+            </div>
+          </div>
+
+          {% endfor %}
+
+
+        <!-- subtle support link -->
+        <div class="text-center mt-3">
+          <small class="text-secondary">Still have questions? <a href="{{contact}}" target="_blank" class="text-decoration-none">Contact our team</a></small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</section>

@@ -1,0 +1,6 @@
+name: 'Basicpagenav'
+type: module
+description: 'Please edit this description'
+core_version_requirement: ^10
+package: Custom
+dependencies: []

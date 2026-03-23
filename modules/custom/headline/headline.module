@@ -1,0 +1,17 @@
+<?php
+/**
+ * Implements hook_theme().
+ */
+function headline_theme() {
+  return [
+    'headline' => [
+      'variables' => [
+        'title' => NULL,
+        'description' => NULL,
+        'button_text' => NULL,
+        'button_link' => NULL
+      ],
+      'template' => 'headline',
+    ],
+  ];
+}

@@ -129,6 +129,7 @@ class YroCardsBlock extends BlockBase
       '#limit_validation_errors' => [], // Skip validation to just add a card
     ];
 
+    //dump($form);
     return $form;
   }
 
@@ -140,7 +141,6 @@ class YroCardsBlock extends BlockBase
     $this->configuration['section_title'] = $form_state->getValue('section_title');
     $this->configuration['section_description'] = $form_state->getValue('section_description');
     $items = $form_state->getValue('items');
-
     foreach ($items as $delta => &$item) {
       if (!empty($item['image'])) {
         $file = \Drupal\file\Entity\File::load($item['image'][0]);

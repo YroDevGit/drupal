@@ -1,0 +1,10 @@
+carousel-styles:
+  version: 1.0
+  css:
+    theme:
+      css/carousel.css: {},
+      https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css : {type : external}
+  js:
+    js/carousel.js: {}
+  dependencies:
+    - core/jquery

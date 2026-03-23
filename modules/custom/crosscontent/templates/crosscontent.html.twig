@@ -1,0 +1,78 @@
+<div class='container'>
+	<div class="text-center mb-5">
+		<span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill fw-semibold mb-3">✦ cross content</span>
+		<h2 class="display-5 fw-bold">{{title}}</h2>
+		<p class="lead text-secondary col-lg-8 mx-auto">{{description}}</p>
+	</div>
+
+	<!-- ========== CROSS CONTENT BLOCK ========== -->
+	<div
+		class="c-cross-section">
+
+  {% for item in contents %}
+    {% if loop.index is divisible by (2) %}
+      <!-- ITEM 2: Image on LEFT, Text on RIGHT (alternating) -->
+		<div
+			class="c-cross-item row align-items-center g-5">
+			<!-- Image Column (Left) -->
+			<div class="col-lg-6 order-1 order-lg-1">
+				<div class="c-cross-image-wrapper">
+					<img src="{{item.image.image_url}}" height="300" width="300" alt="Data analytics dashboard" class="c-cross-image">
+				</div>
+			</div>
+			<!-- Text Column (Right) -->
+			<div class="col-lg-6 order-2 order-lg-2">
+				<div class="c-cross-content">
+					<h3 class="c-cross-title">{{item.text}}</h3>
+					<p class="c-cross-description">
+          {{item.subtitle}}
+					</p>
+					<ul class="c-cross-features">
+          {% for ckr in item.checker|split(';') %}
+            <li class="c-cross-feature-item">
+							<span class="c-cross-feature-icon">
+								<i class="fas fa-check"></i>
+							</span>
+							<span class="c-cross-feature-text">{{ckr}}</span>
+						</li>
+          {% endfor %}
+					</ul>
+				</div>
+			</div>
+		</div>
+    {% else %}
+      <!-- ITEM 1: Image on RIGHT, Text on LEFT -->
+		<div
+			class="c-cross-item row align-items-center g-5">
+			<!-- Text Column (Left) -->
+			<div class="col-lg-6 order-1 order-lg-1">
+				<div class="c-cross-content">
+					<h3 class="c-cross-title">{{item.text}}</h3>
+					<p class="c-cross-description">
+            {{item.subtitle}}
+					</p>
+					<ul class="c-cross-features">
+          {% for ckr in item.checker|split(';') %}
+            <li class="c-cross-feature-item">
+							<span class="c-cross-feature-icon">
+								<i class="fas fa-check"></i>
+							</span>
+							<span class="c-cross-feature-text">{{ckr}}</span>
+						</li>
+          {% endfor %}
+					</ul>
+				</div>
+			</div>
+			<!-- Image Column (Right) -->
+			<div class="col-lg-6 order-2 order-lg-2">
+				<div class="c-cross-image-wrapper">
+					<img src="{{item.image.image_url}}" height="300" width="300" alt="Team collaboration" class="c-cross-image">
+				</div>
+			</div>
+		</div>
+    {% endif %}
+
+  {% endfor %}
+
+	</div>
+</div>

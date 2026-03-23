@@ -1,0 +1,130 @@
+.c-cross-section {
+  padding: 2rem 0;
+}
+
+.c-cross-item {
+  margin-bottom: 4rem;
+  background: transparent;
+}
+
+.c-cross-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Image Container */
+.c-cross-image-wrapper {
+  position: relative;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.c-cross-image-wrapper:hover {
+  transform: scale(1.02);
+}
+
+.c-cross-image {
+  width: 100%;
+  object-fit: cover;
+  min-height: 320px;
+  display: block;
+}
+
+/* Content Container */
+.c-cross-content {
+  padding: 1.5rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.c-cross-title {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.c-cross-description {
+  font-size: 1rem;
+  color: #475569;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+/* Feature Items List */
+.c-cross-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.c-cross-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.875rem;
+  font-size: 0.95rem;
+  color: #1e293b;
+}
+
+.c-cross-feature-item:last-child {
+  margin-bottom: 0;
+}
+
+.c-cross-feature-icon {
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #0d6efd;
+  color: white;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.c-cross-feature-icon i {
+  font-size: 0.75rem;
+}
+
+.c-cross-feature-text {
+  flex: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .c-cross-title {
+    font-size: 1.5rem;
+  }
+
+  .c-cross-item {
+    margin-bottom: 2.5rem;
+  }
+
+  .c-cross-content {
+    padding: 1.5rem 0.5rem;
+  }
+
+  .c-cross-image {
+    min-height: 250px;
+  }
+}
+
+@media (max-width: 576px) {
+  .c-cross-title {
+    font-size: 1.35rem;
+  }
+
+  .c-cross-description {
+    font-size: 0.9rem;
+  }
+
+  .c-cross-feature-item {
+    font-size: 0.85rem;
+  }
+}

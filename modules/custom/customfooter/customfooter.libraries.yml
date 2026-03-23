@@ -1,0 +1,9 @@
+customfooter-styles:
+  version: 1.0
+  css:
+    theme:
+      css/customfooter.css: {}
+  js:
+    js/customfooter.js: {}
+  dependencies:
+    - core/jquery

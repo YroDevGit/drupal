@@ -1,0 +1,9 @@
+cta-styles:
+  version: 1.0
+  css:
+    theme:
+      css/cta.css: {}
+  js:
+    js/cta.js: {}
+  dependencies:
+    - core/jquery

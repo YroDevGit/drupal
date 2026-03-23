@@ -1,0 +1,13 @@
+name: 'Own'
+type: theme
+description: 'Custom Drupal Theme'
+core_version_requirement: ^10
+base theme: false
+
+libraries:
+  - own/global
+
+regions:
+  header: Header
+  content: Content
+  footer: Footer

@@ -1,0 +1,12 @@
+<?php
+
+function pages_theme() {
+  return [
+    'login_page' => [
+      'template' => 'login-page',
+      'variables' => [
+        'form' => NULL,
+      ]
+    ],
+  ];
+}

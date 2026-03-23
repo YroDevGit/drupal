@@ -1,0 +1,9 @@
+cfooter-styles:
+  version: 1.0
+  css:
+    theme:
+      css/cfooter.css: {}
+  js:
+    js/cfooter.js: {}
+  dependencies:
+    - core/jquery

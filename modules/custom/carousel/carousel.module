@@ -1,0 +1,16 @@
+<?php
+/**
+ * Implements hook_theme().
+ */
+function carousel_theme() {
+  return [
+    'carousel' => [
+      'variables' => [
+        'title' => NULL,
+        'description' => NULL,
+        'people' => []
+      ],
+      'template' => 'carousel',
+    ],
+  ];
+}

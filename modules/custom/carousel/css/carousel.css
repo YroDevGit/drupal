@@ -1,0 +1,222 @@
+/* Main Container */
+.c-carousel-block {
+  background: #ffffff;
+  border-radius: 1.5rem;
+  padding: 3rem 3rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  position: relative;
+}
+
+/* Header Section */
+.c-carousel-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.c-carousel-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: #1e293b;
+}
+
+.c-carousel-description {
+  font-size: 1.125rem;
+  color: #64748b;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Scrollable Container - with padding for buttons */
+.c-carousel-scrollable {
+  position: relative;
+  padding: 0.5rem 0;
+}
+
+/* Track Container - scrollable area */
+.c-carousel-track-container {
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  padding: 0.5rem 0 1.5rem 0;
+  scrollbar-color: #94a3b8 #e2e8f0;
+}
+
+.c-carousel-track-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.c-carousel-track-container::-webkit-scrollbar-track {
+  background: #e2e8f0;
+  border-radius: 10px;
+}
+
+.c-carousel-track-container::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 10px;
+}
+
+.c-carousel-track-container::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Track - flex container for items */
+.c-carousel-track {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.5rem 0.25rem;
+}
+
+/* Carousel Item Card */
+.c-carousel-item {
+  flex: 0 0 auto;
+  width: 280px;
+  background: white;
+  border-radius: 1.25rem;
+  padding: 1.75rem 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.c-carousel-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 30px -12px rgba(0,0,0,0.15);
+  border-color: #cbd5e1;
+}
+
+/* Circled Image */
+.c-carousel-circle-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 1.25rem;
+  display: block;
+  border: 3px solid #0d6efd;
+  padding: 3px;
+  background: white;
+  transition: transform 0.3s ease;
+}
+
+.c-carousel-item:hover .c-carousel-circle-image {
+  transform: scale(1.05);
+  border-color: #0b5ed7;
+}
+
+/* Title & Subtitle */
+.c-carousel-item-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #0f172a;
+}
+
+.c-carousel-item-subtitle {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-bottom: 0;
+  line-height: 1.4;
+}
+
+/* Navigation Buttons - FIXED: properly positioned and visible */
+.c-carousel-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 20;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  color: #0f172a;
+  font-size: 1.25rem;
+  backdrop-filter: blur(4px);
+  background-color: rgba(255,255,255,0.95);
+}
+
+.c-carousel-nav-btn:hover {
+  background: #0d6efd;
+  color: white;
+  border-color: #0d6efd;
+  transform: translateY(-50%) scale(1.05);
+  box-shadow: 0 6px 16px rgba(13,110,253,0.3);
+}
+
+.c-carousel-nav-btn:active {
+  transform: translateY(-50%) scale(0.98);
+}
+
+/* Position left button outside the track but within block */
+.c-carousel-nav-left {
+  left: -20px;
+}
+
+.c-carousel-nav-right {
+  right: -20px;
+}
+
+/* Add container padding to ensure buttons don't get cut off */
+.c-carousel-block {
+  overflow: visible;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .c-carousel-block {
+    padding: 2rem 1.5rem;
+  }
+  .c-carousel-title {
+    font-size: 1.875rem;
+  }
+  .c-carousel-description {
+    font-size: 1rem;
+  }
+  .c-carousel-item {
+    width: 260px;
+    padding: 1.5rem 1rem;
+  }
+  .c-carousel-circle-image {
+    width: 100px;
+    height: 100px;
+  }
+  .c-carousel-nav-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+  .c-carousel-nav-left {
+    left: -12px;
+  }
+  .c-carousel-nav-right {
+    right: -12px;
+  }
+}
+
+@media (max-width: 576px) {
+  .c-carousel-block {
+    padding: 1.5rem 1rem;
+  }
+  .c-carousel-nav-left {
+    left: -8px;
+  }
+  .c-carousel-nav-right {
+    right: -8px;
+  }
+  .c-carousel-nav-btn {
+    width: 36px;
+    height: 36px;
+  }
+}

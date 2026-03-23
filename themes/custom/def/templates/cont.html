@@ -1,0 +1,202 @@
+<!-- main container -->
+
+
+  <!-- headline section -->
+  <div class="text-center mb-5">
+    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill fw-semibold">✦ modern blocks</span>
+    <h1 class="display-5 fw-bold section-title mt-3">Cross content, accordion & CTA</h1>
+    <p class="lead text-secondary col-lg-8 mx-auto">A clean Bootstrap 5 example that combines rich media layout, interactive FAQ accordion, a dedicated view‑now panel, and a conversion‑driven call‑to‑action.</p>
+  </div>
+
+  <!-- ========== CROSS CONTENT BLOCK (image + text + list) ========== -->
+  <div class="row align-items-center g-5 my-4">
+    <div class="col-lg-6">
+      <!-- image with overlay caption (pure bootstrap utility) -->
+      <div class="card border-0 shadow-lg overflow-hidden border-radius-xl">
+        <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" class="card-img" alt="team working in a modern office" style="height: 380px; object-fit: cover;">
+        <div class="card-img-overlay card-img-overlay-custom d-flex align-items-end text-white p-4">
+          <div>
+            <h5 class="fw-bold mb-1">Collaborative workspace</h5>
+            <p class="mb-0 small opacity-75">flexible, creative, efficient</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <span class="badge bg-warning bg-opacity-15 text-warning-emphasis px-3 py-2 rounded-pill mb-3 border border-warning-subtle">📌 cross content</span>
+      <h2 class="fw-bold mb-3">Build faster with integrated teams</h2>
+      <p class="text-secondary">Bring together design, engineering and product. This block balances a visual asset with a bulletproof feature list — perfect for modern landing pages.</p>
+
+      <!-- feature list (two columns on small screens) -->
+      <div class="row row-cols-1 row-cols-sm-2 g-3 mt-4">
+        <div class="col">
+          <div class="d-flex align-items-start gap-2">
+            <span class="text-primary fs-5">✓</span>
+            <div><strong>Unlimited members</strong><br><small class="text-secondary">add your whole org</small></div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="d-flex align-items-start gap-2">
+            <span class="text-primary fs-5">✓</span>
+            <div><strong>Real‑time sync</strong><br><small class="text-secondary">zero lag updates</small></div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="d-flex align-items-start gap-2">
+            <span class="text-primary fs-5">✓</span>
+            <div><strong>Audit logs</strong><br><small class="text-secondary">enterprise grade</small></div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="d-flex align-items-start gap-2">
+            <span class="text-primary fs-5">✓</span>
+            <div><strong>API access</strong><br><small class="text-secondary">integrate anything</small></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- subtle button -->
+      <div class="mt-4">
+        <a href="#" class="btn btn-outline-primary rounded-pill px-4">Learn more →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== ACCORDION ITEMS (FAQ style) ========== -->
+  <div class="my-5 pt-4 pb-3">
+    <div class="text-center mb-4">
+      <span class="badge bg-info bg-opacity-10 text-info-emphasis px-3 py-2 rounded-pill">🔄 accordion block</span>
+      <h3 class="fw-bold mt-2">Frequently asked questions</h3>
+      <p class="text-secondary col-md-8 mx-auto">Everything you need to know about the product — clean, collapsible and accessible.</p>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="accordion shadow-sm rounded-4 overflow-hidden" id="faqAccordion">
+          <!-- item 1 -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+              <button class="accordion-button fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                💳 What payment methods do you accept?
+              </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+              <div class="accordion-body bg-light">
+                We accept all major credit cards (Visa, Mastercard, American Express), PayPal, and bank transfers for annual plans. Subscriptions are securely processed via Stripe.
+              </div>
+            </div>
+          </div>
+          <!-- item 2 -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+              <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                🔄 Can I switch plans later?
+              </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+              <div class="accordion-body bg-light">
+                Absolutely. You can upgrade or downgrade your plan at any time. Changes take effect immediately and you’ll receive a prorated adjustment on your next invoice.
+              </div>
+            </div>
+          </div>
+          <!-- item 3 -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+              <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                🧑‍🤝‍🧑 Is there a free trial for teams?
+              </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+              <div class="accordion-body bg-light">
+                Yes! New team accounts get a 14‑day full‑feature trial — no credit card required. After the trial you can choose a plan that fits your size.
+              </div>
+            </div>
+          </div>
+          <!-- item 4 (extra) -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingFour">
+              <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                🔒 Where is my data hosted?
+              </button>
+            </h2>
+            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+              <div class="accordion-body bg-light">
+                All data is hosted on AWS (Frankfurt or Virginia, according to your selection) and encrypted at rest. We are SOC2 compliant and undergo regular security audits.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- subtle support link -->
+        <div class="text-center mt-3">
+          <small class="text-secondary">Still have questions? <a href="#" class="text-decoration-none">Contact our team</a></small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== NEW: VIEW NOW SECTION (title, description, button) ========== -->
+  <div class="view-now-section my-5 p-5 rounded-5 shadow-sm">
+    <div class="row align-items-center">
+      <div class="col-lg-8">
+        <!-- badge (optional, adds context) -->
+        <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill mb-3">👀 just added</span>
+        <!-- TITLE -->
+        <h2 class="display-6 fw-bold mb-3">Explore the latest features</h2>
+        <!-- DESCRIPTION -->
+        <p class="text-secondary mb-4 mb-lg-0 fs-5 col-lg-11">
+          Get a first look at our brand‑new dashboard, real‑time analytics, and team collaboration tools.
+          See why thousands of teams choose us to streamline their work.
+        </p>
+      </div>
+      <div class="col-lg-4 text-lg-end">
+        <!-- VIEW NOW BUTTON (prominent action) -->
+        <a href="#" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow hover-lift fw-semibold">
+          View now →
+        </a>
+        <div class="small text-secondary mt-2">free access · no login required</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== CTA (call to action) WITH TITLE, DESCRIPTION & BUTTON ========== -->
+  <div class="my-5 pt-4">
+    <div class="cta-gradient text-white p-5 rounded-5 shadow-lg position-relative overflow-hidden">
+      <!-- decorative element (optional) -->
+      <div class="position-absolute top-0 end-0 opacity-25" style="font-size: 140px; line-height: 1;">✨</div>
+
+      <!-- CTA content: title, description, button -->
+      <div class="row align-items-center position-relative">
+        <div class="col-lg-8">
+          <!-- small badge / eyebrow -->
+          <span class="badge bg-white text-primary bg-opacity-75 px-3 py-2 rounded-pill mb-3">✨ limited time</span>
+          <!-- TITLE -->
+          <h2 class="display-6 fw-bold mb-3">Start your 14‑day free trial</h2>
+          <!-- DESCRIPTION -->
+          <p class="mb-4 mb-lg-0 opacity-90 col-lg-10 fs-5">
+            No credit card required. Access all cross‑content blocks, accordions, and premium features instantly.
+            Join thousands of teams already building smarter.
+          </p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+          <!-- BUTTON (primary action) -->
+          <a href="#" class="btn btn-light text-primary fw-semibold px-5 py-3 rounded-pill shadow hover-lift">Get started →</a>
+          <div class="small text-white-50 mt-2">or <a href="#" class="text-white fw-semibold">talk to sales</a></div>
+        </div>
+      </div>
+
+      <!-- extra description line (optional, but keeps description prominent) -->
+      <div class="mt-4 pt-2 small text-white-50 border-top border-white border-opacity-25">
+        ✦ Free 14-day trial ✦ No credit card ✦ Cancel anytime
+      </div>
+    </div>
+  </div>
+
+  <!-- extra: brand strip / social proof (optional) -->
+  <div class="row justify-content-center text-center g-4 py-4 text-secondary">
+    <div class="col-6 col-md-3">▲ Company One</div>
+    <div class="col-6 col-md-3">◉ partner two</div>
+    <div class="col-6 col-md-3">⬡ startup three</div>
+    <div class="col-6 col-md-3">▣ venture four</div>
+  </div>
+

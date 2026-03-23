@@ -1,0 +1,16 @@
+<?php
+/**
+ * Implements hook_theme().
+ */
+function basic_nav_theme() {
+  return [
+    'basic_nav' => [
+      'variables' => [
+        'home' => NULL,
+        'login' => NULL,
+        'about' => null
+      ],
+      'template' => 'basic_nav',
+    ],
+  ];
+}

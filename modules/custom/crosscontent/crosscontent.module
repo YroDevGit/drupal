@@ -1,0 +1,16 @@
+<?php
+/**
+ * Implements hook_theme().
+ */
+function crosscontent_theme() {
+  return [
+    'crosscontent' => [
+      'variables' => [
+        'title' => NULL,
+        'description' => NULL,
+        "contents" => []
+      ],
+      'template' => 'crosscontent',
+    ],
+  ];
+}

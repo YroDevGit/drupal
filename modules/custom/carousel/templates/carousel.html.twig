@@ -1,0 +1,46 @@
+<div
+	class="container">
+	<!-- ========== CAROUSEL BLOCK (with c-carousel namespaced classes) ========== -->
+	<div
+		class="c-carousel-block">
+
+		<!-- Header: Title and Description -->
+		<div class="c-carousel-header">
+			<h2 class="c-carousel-title text-primary">{{title}}</h2>
+			<p class="c-carousel-description">
+				{{description}}
+			</p>
+		</div>
+
+		<!-- Scrollable Carousel -->
+		<div
+			class="c-carousel-scrollable">
+			<!-- Navigation Buttons -->
+			<div class="c-carousel-nav-btn c-carousel-nav-left" id="cCarouselScrollLeft">
+				<i class="fas fa-chevron-left"></i>
+			</div>
+			<div class="c-carousel-nav-btn c-carousel-nav-right" id="cCarouselScrollRight">
+				<i class="fas fa-chevron-right"></i>
+			</div>
+
+			<!-- Scrollable Track -->
+			<div class="c-carousel-track-container" id="cCarouselTrackContainer">
+				<div class="c-carousel-track" id="cCarouselTrack">
+					{% for item in people %}
+						<!-- Carousel Item 1 - Clickable (navigates to URL) -->
+						<a href="mailto::{{item.email}}" class="c-carousel-item" target="_blank" rel="noopener noreferrer">
+							<img src='{{item.img}}' alt="Sarah Johnson" class="c-carousel-circle-image">
+							<h3 class="c-carousel-item-title">{{item.firstname}} {{item.lastname}}</h3>
+							<p class="c-carousel-item-subtitle">{{item.email}}</p>
+						</a>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Demo Note (optional) -->
+	<div class="text-center mt-4 text-secondary" style='display:none;'>
+		<small>⬆️ Scrollable carousel — click any profile to open example URL ⬆️</small>
+	</div>
+</div>

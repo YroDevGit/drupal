@@ -1,0 +1,16 @@
+<?php
+/**
+ * Implements hook_theme().
+ */
+function main_navigation_theme() {
+  return [
+    'main_navigation' => [
+      'variables' => [
+        'title' => NULL,
+        'description' => NULL,
+        'menus' => []
+      ],
+      'template' => 'main_navigation',
+    ],
+  ];
+}

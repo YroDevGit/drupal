@@ -1,0 +1,15 @@
+<?php
+/**
+ * Implements hook_theme().
+ */
+function cfooter_theme() {
+  return [
+    'cfooter' => [
+      'variables' => [
+        'title' => NULL,
+        'description' => NULL,
+      ],
+      'template' => 'cfooter',
+    ],
+  ];
+}

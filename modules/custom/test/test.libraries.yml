@@ -1,0 +1,9 @@
+test-styles:
+  version: 1.0
+  css:
+    theme:
+      css/test.css: {}
+  js:
+    js/test.js: {}
+  dependencies:
+    - core/jquery

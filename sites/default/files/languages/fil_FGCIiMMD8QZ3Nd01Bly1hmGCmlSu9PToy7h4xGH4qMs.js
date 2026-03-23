@@ -1,0 +1,1 @@
+window.drupalTranslations = {"strings":{"":{"Save":"Pangalagaan","Replies":"Mga tugon","Cancel":"Kanselahin","Edit":"Wastuhin","Add":"Idagdag"}},"pluralFormula":{"0":0,"1":0,"default":1}};

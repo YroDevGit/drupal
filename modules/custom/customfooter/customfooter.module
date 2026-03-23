@@ -1,0 +1,15 @@
+<?php
+/**
+ * Implements hook_theme().
+ */
+function customfooter_theme() {
+  return [
+    'customfooter' => [
+      'variables' => [
+        'title' => NULL,
+        'links' => [],
+      ],
+      'template' => 'customfooter',
+    ],
+  ];
+}

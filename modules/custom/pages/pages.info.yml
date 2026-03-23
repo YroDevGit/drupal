@@ -1,0 +1,5 @@
+name: Pages
+type: module
+description: Custom pages module with login
+core_version_requirement: ^10
+package: Custom

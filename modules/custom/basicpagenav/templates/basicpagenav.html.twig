@@ -1,0 +1,88 @@
+<div class="block-navigation" role="region" aria-label="Main navigation block">
+
+    <!-- block title (visible to screen readers & as header) -->
+    <div class="block-title" id="block-mainnavigation-title">
+      <!-- tiny icon (drupal druplet style) -->
+      <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+      </svg>
+      <span>Main navigation</span>
+    </div>
+
+    <!-- tiny admin toolbar simulation (optional, but shows drupal context) -->
+    <div class="admin-hint">
+      <svg width="16" height="16" viewBox="0 0 24 24" style="fill:#2673a5;">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4 1.79-4 4-4zm0 13c-2.67 0-5.33-1.33-7-3.5 1.43-2.03 4.13-3.5 7-3.5s5.57 1.47 7 3.5c-1.67 2.17-4.33 3.5-7 3.5z"/>
+      </svg>
+      <span>You are viewing the navigation block as a site visitor. (admin: block—main)</span>
+    </div>
+
+    <!-- main navigation region -->
+    <div class="menu--main" aria-labelledby="block-mainnavigation-title">
+      <ul class="menu">
+        <!-- standard menu item -->
+        <li class="menu-item">
+          <a href="/home" class="is-active" aria-current="page">Home</a>
+        </li>
+
+        <!-- parent item with drop-down (About Us) -->
+        <li class="menu-item menu-item--has-children">
+          <a href="/about">About</a>
+          <!-- submenu (dropdown) -->
+          <ul class="submenu">
+            <li class="submenu-item"><a href="/about/team">Our team</a></li>
+            <li class="submenu-item"><a href="/about/mission">Mission & values</a></li>
+            <li class="submenu-item"><a href="/about/history">History</a></li>
+            <li class="submenu-item--separator" role="separator"></li>
+            <li class="submenu-item"><a href="/about/partners">Partners</a></li>
+          </ul>
+        </li>
+
+        <!-- parent: What we do (with submenu) -->
+        <li class="menu-item menu-item--has-children">
+          <a href="/services">What we do</a>
+          <ul class="submenu">
+            <li class="submenu-item"><a href="/services/consulting">Consulting</a></li>
+            <li class="submenu-item"><a href="/services/training">Training</a></li>
+            <li class="submenu-item"><a href="/services/support">Support & maintenance</a></li>
+          </ul>
+        </li>
+
+        <!-- regular item -->
+        <li class="menu-item">
+          <a href="/resources">Resources</a>
+        </li>
+
+        <!-- blog / insights -->
+        <li class="menu-item">
+          <a href="/blog">Blog</a>
+        </li>
+
+        <!-- contact, also plain -->
+        <li class="menu-item">
+          <a href="/contact">Contact</a>
+        </li>
+
+        <!-- CTA / "How you can help" - as Drupal block item often appears -->
+        <li class="menu-item menu-item--cta">
+          <a href="/get-involved" class="button">✨ How you can help</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- just to simulate block footer or contextual links (optional) -->
+    <div class="demo-context">
+      <div class="breadcrumb-mock">
+        ⚡ &nbsp;You are in: <span>Home</span> > <span>About</span> (demo)
+      </div>
+      <div style="font-size:0.9rem; display:flex; gap:16px;">
+        <span>🌐 EN</span>
+        <span>🔍 Search</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- extra footnote: design fits Drupal block + pure CSS dropdown, no JS -->
+  <div style="position: fixed; bottom: 10px; right: 20px; background: #daf0f9; color: #073a5e; padding: 6px 16px; border-radius: 60px; font-size: 0.8rem; font-weight: 500; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    ⚙️ Drupal navigation block · html + css
+  </div>

@@ -1,0 +1,275 @@
+<?php
+
+namespace Drupal\main_navigation\Plugin\Block;
+
+use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Provides a 'Main_navigation' Block.
+ *
+ * @Block(
+ *   id = "main_navigation_block",
+ *   admin_label = @Translation("Main_navigation Block"),
+ * )
+ */
+class Main_navigationBlock extends BlockBase
+{
+  public function data(array $array = [])
+  {
+    $data["title"] = [
+      "type" => "textfield",
+      "label" => "Title",
+      "default" => "Sample title"
+    ];
+
+    $data["description"] = [
+      "type" => "textarea",
+      "label" => "Description",
+      "default" => "Sample description for YroBox component and CTR."
+    ];
+
+    $data['button'] = [
+      "type" => "submit",
+      "label" => "add link",
+      "action" => "addOne",
+      "ajax" => [
+        'callback' => [get_class($this), 'ajaxCallback'],
+        'wrapper' => 'menus-wrapper',
+      ]
+    ];
+
+    $data["menus"] = [
+      "type" => "fieldset",
+      "label" => "Menu Items",
+      "id" => "menus_count",
+      "auto" => false,
+      "items" => [
+        "text" => [
+          "type" => "textfield",
+          "label" => "Label",
+          "default" => "home"
+        ],
+        "url" => [
+          "type" => "textfield",
+          "label" => "Link or URL",
+          "default" => "/"
+        ],
+        "btn" => [
+          "type" => "submit",
+          "label" => "Remove",
+          "action" => "removeOne",
+          "id" => "rem1"
+        ]
+      ]
+    ];
+
+    return $data;
+  }
+
+  public function defaultConfiguration()
+  {
+    $data = $this->data();
+    $ret = [];
+
+    foreach ($data as $k => $v) {
+      $val = $v["default"] ?? $v["items"] ?? "";
+      if (! $val) continue;
+
+      if (is_array($val)) {
+        $arr = [];
+        foreach ($val as $key => $value) {
+          $arr[$key] = $value['default'] ?? "";
+        }
+        $ret[$k][] = $arr;
+      } else {
+        $ret[$k] = $val;
+      }
+    }
+
+    return $ret;
+  }
+
+  public function blockForm($form, FormStateInterface $form_state)
+  {
+    $data = $this->data();
+    $form = [];
+
+    $form = $this->filterBlockFormCtr($data, $form_state);
+
+    return $form;
+  }
+
+  public function filterBlockFormCtr($data, FormStateInterface $form_state, string|int $parent = null, &$counter = -1)
+  {
+    $form = [];
+
+    foreach ($data as $k => $v) {
+      $counter++;
+
+      if (isset($v['type']) && $v['type'] == "submit") {
+        $form[$k] = [
+          '#type' => 'submit',
+          '#value' => $this->t($v['label'] ?? "Submit"),
+          "#id" => $v['id'] ?? $k,
+        ];
+
+        if (isset($v['ajax'])) {
+          $form[$k]["#ajax"] = $v['ajax'];
+        }
+
+        if (isset($v['action'])) {
+          $form[$k]['#submit'] = [
+            [get_class($this), $v['action']]
+          ];
+        }
+
+        continue;
+      }
+
+      if (isset($v['type']) && $v['type'] == "fieldset") {
+
+        $items = $v['items'] ?? [];
+
+        $triggerBtn = true;
+        $akinIto = $form_state->get($k);
+
+        $form_state->set($k, $form_state->get($k) ?? $this->configuration[$k] ?? []);
+
+        if ($akinIto === NULL) {
+          $triggerBtn = false;
+          $akinIto = $form_state->get($k);
+        }
+
+        unset($akinIto[0]);
+        $akinIto = array_values($akinIto);
+
+        $num_items = 0;
+        if ($form_state->get($k)) {
+          $num_items = count($akinIto);
+        } else {
+          $num_items = count($akinIto);
+        }
+
+        $form[$k] = [
+          '#type' => 'fieldset',
+          '#title' => $this->t($v['label']),
+          '#tree' => TRUE,
+          '#prefix' => '<div id="menus-wrapper">',
+          '#suffix' => '</div>',
+        ];
+
+        $children = $this->filterBlockFormCtr($items, $form_state, $k, $counter);
+
+        for ($i = 0; $i < $num_items; $i++) {
+          $atinIto = $akinIto[$i] ?? [];
+
+          $form[$k][$i]['divider'] = [
+            '#markup' => '<hr style="margin:10px 0;">',
+          ];
+
+          foreach ($children as $ikey => $child) {
+            if (isset($child['#type']) && $child['#type'] == 'submit') {
+
+              $child['#limit_validation_errors'] = [];
+              $child['#attributes']['data-index'] = $i;
+            } else {
+              $child['#default_value'] = $atinIto[$ikey] ?? "";
+            }
+            $form[$k][$i][$ikey] = $child;
+          }
+        }
+        continue;
+      }
+
+      $form[$k] = [
+        '#type' => $v['type'] ?? "textfield",
+        '#title' => $this->t($v['label'] ?? ucfirst($k)),
+        '#default_value' => $this->configuration[$k] ?? "",
+      ];
+    }
+
+    return $form;
+  }
+
+  public static function ajaxCallback(array &$form, FormStateInterface $form_state)
+  {
+    $complete_form = $form_state->getCompleteForm();
+
+    if (isset($complete_form['menus'])) {
+      return $complete_form['menus'];
+    }
+
+    if (isset($complete_form['settings']['menus'])) {
+      return $complete_form['settings']['menus'];
+    }
+    return $complete_form;
+  }
+
+  public function blockSubmit($form, FormStateInterface $form_state)
+  {
+    $data = $this->data();
+
+    foreach ($data as $k => $v) {
+      $this->configuration[$k] = $form_state->getValue($k);
+    }
+
+    //$this->configuration['menus'] = [];
+  }
+
+  public static function addOne(array &$form, FormStateInterface $form_state)
+  {
+    //$form_state->set("menus_count", $num_items);
+    $current = $form_state->get("menus");
+    $current[] = [
+      "text" => "/",
+      "url" => "/"
+    ];
+
+    $form_state->set("menus", $current);
+    //dump($form_state->get("menus"));
+    $form_state->setRebuild(TRUE);
+  }
+
+  public static function removeOne(array &$form, FormStateInterface $form_state)
+  {
+    $trigger = $form_state->getTriggeringElement();
+    $index = $trigger['#attributes']['data-index'];
+
+    // Use temporary storage to hold menus during rebuild
+    $menus = $form_state->getTemporaryValue('menus') ?? $form_state->getValue('menus') ?? [];
+
+    if (isset($menus[$index])) {
+      array_splice($menus, $index, 1);
+    }
+
+    // Store back in temporary value
+    $form_state->setTemporaryValue('menus', $menus);
+
+    // Update counter
+    $form_state->set('menus_count', count($menus));
+
+    // Rebuild the form so changes take effect
+    $form_state->setRebuild(TRUE);
+  }
+
+  public function build()
+  {
+    $data = $this->data();
+
+    $ret = [
+      '#theme' => 'main_navigation',
+      '#attached' => [
+        'library' => [
+          'main_navigation/main_navigation-styles',
+        ],
+      ],
+    ];
+
+    foreach ($data as $k => $v) {
+      $ret["#" . $k] = $this->configuration[$k];
+    }
+
+    return $ret;
+  }
+}

@@ -1,0 +1,9 @@
+brand_strip-styles:
+  version: 1.0
+  css:
+    theme:
+      css/brand_strip.css: {}
+  js:
+    js/brand_strip.js: {}
+  dependencies:
+    - core/jquery

@@ -1,0 +1,19 @@
+<?php
+/**
+ * Implements hook_theme().
+ */
+function imagebanner_theme() {
+  return [
+    'imagebanner' => [
+      'variables' => [
+        'title' => NULL,
+        'description' => NULL,
+        "img" => NULL,
+        "buttontext" => null,
+        "buttonurl" => null,
+        "promotion" => NULL
+      ],
+      'template' => 'imagebanner',
+    ],
+  ];
+}

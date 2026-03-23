@@ -1,0 +1,23 @@
+/* own theme styles */
+
+body{
+  all: unset;
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background-image: none !important;
+}
+
+.container{
+  max-width:1200px;
+  margin:auto;
+}
+
+.site-header1{
+  background:#222;
+  color:#fff;
+}
+
+.site-footer1{
+  background:#111;
+  color:#fff;
+}

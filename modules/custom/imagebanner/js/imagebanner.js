@@ -1,0 +1,1 @@
+// imagebanner javascript

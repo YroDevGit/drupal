@@ -1,0 +1,312 @@
+/* basicpagenav css */
+ /* RESET / BASE — mimics Drupal’s default normalization */
+ * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #f2f4f7;  /* soft drupal background */
+  font-family: 'Segoe UI', 'Helvetica', 'Arial', sans-serif;
+  line-height: 1.5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 20px;
+}
+
+/* ----- main card: typical Drupal block container ----- */
+.block-navigation {
+  width: 100%;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;               /* keeps the rounded corners tidy */
+}
+
+/* ----- block title (like in Drupal block configuration) ----- */
+.block-title {
+  background: #e9ecf1;
+  padding: 12px 24px;
+  border-bottom: 1px solid #d3dae3;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: #2a3b4e;
+  display: flex;
+  align-items: center;
+}
+
+.block-title svg {
+  margin-right: 8px;
+  fill: #0b6b9b;
+}
+
+/* ----- main navigation region (core of the block) ----- */
+.menu--main {
+  background: #ffffff;
+  padding: 0 16px;
+}
+
+/* primary menu list – flex layout, Drupal "menu--main" style */
+.menu {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 4px;
+  align-items: center;
+}
+
+/* top-level list items */
+.menu-item {
+  position: relative;    /* for dropdown positioning */
+}
+
+/* top-level links */
+.menu-item a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #1d2b3a;
+  background: transparent;
+  text-decoration: none;
+  border-radius: 40px;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+/* hover & focus states (accessibility) */
+.menu-item a:hover,
+.menu-item a:focus {
+  background: #eef3f9;
+  color: #0b5c8a;
+  outline: none;
+}
+
+/* active trail simulation (is-active) */
+.menu-item.is-active a {
+  background: #e3f2fd;
+  color: #0b5c8a;
+  font-weight: 600;
+}
+
+/* tiny arrow indicator for parent items (Drupal often uses <span> but we do via pseudo) */
+.menu-item--has-children > a::after {
+  content: "▾";
+  font-size: 1.2rem;
+  line-height: 1;
+  margin-left: 6px;
+  opacity: 0.7;
+  transition: transform 0.2s;
+}
+
+.menu-item--has-children:hover > a::after {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+/* DROP-DOWN MENU (pure CSS, appears on hover) */
+.submenu {
+  position: absolute;
+  top: calc(100% - 8px);
+  left: 0;
+  min-width: 220px;
+  background: white;
+  border-radius: 12px;
+  padding: 8px 0;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 5px 10px -5px rgba(0, 0, 0, 0.1);
+  list-style: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  z-index: 100;
+  border: 1px solid #eef2f6;
+  margin-top: 4px;
+}
+
+.menu-item--has-children:hover .submenu {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* submenu items */
+.submenu-item {
+  width: 100%;
+}
+
+.submenu-item a {
+  display: block;
+  padding: 10px 20px;
+  white-space: nowrap;
+  background: transparent;
+  border-radius: 0;
+  color: #1d2b3a;
+  font-weight: 400;
+  transition: background 0.15s, padding-left 0.15s;
+}
+
+.submenu-item a:hover {
+  background: #f0f6fd;
+  padding-left: 26px;         /* subtle indentation */
+  color: #0b6b9b;
+}
+
+/* tiny divider / separator example (mimics Drupal menu_separator) */
+.submenu-item--separator {
+  height: 1px;
+  background: #dee5ed;
+  margin: 8px 0;
+  pointer-events: none;
+}
+
+/* special button style (call to action) inside navigation */
+.menu-item--cta a {
+  background: #1e6f9f;
+  color: white;
+  border-radius: 40px;
+  padding: 12px 24px;
+  margin-left: 12px;
+  box-shadow: 0 2px 6px rgba(0, 80, 130, 0.3);
+  font-weight: 600;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.menu-item--cta a:hover {
+  background: #135a85;
+  color: white;
+  transform: scale(1.02);
+}
+
+/* responsive touches: if the menu wraps, cta stays nicely aligned */
+@media (max-width: 780px) {
+  .menu {
+    gap: 0px;
+  }
+
+  .menu-item a {
+    padding: 12px 14px;
+    font-size: 0.95rem;
+  }
+
+  .menu-item--cta a {
+    margin-left: 0;
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
+
+  .submenu {
+    min-width: 200px;
+  }
+}
+
+/* extra small devices: convert long dropdown to touch friendly */
+@media (max-width: 580px) {
+  .menu {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .menu-item {
+    width: 100%;
+  }
+
+  .menu-item a {
+    justify-content: space-between;
+  }
+
+  .submenu {
+    position: static;
+    box-shadow: none;
+    opacity: 1;
+    visibility: visible;
+    border-left: 3px solid #bed9f0;
+    margin-left: 24px;
+    margin-top: 0;
+    margin-bottom: 8px;
+    padding: 0 0 4px 0;
+    background: #fafcfe;
+    display: none;           /* in a real Drupal we’d use JS, but for demo */
+  }
+
+  /* on mobile we cheat: show submenu for demo (hover doesn't make sense) – we want to display example */
+  .menu-item--has-children .submenu {
+    display: block;          /* make it always visible on narrow so user sees nested items */
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+    border-radius: 0 0 8px 8px;
+    background: #f6f9ff;
+    margin-left: 20px;
+    width: auto;
+  }
+
+  .menu-item--has-children > a::after {
+    transform: rotate(180deg);  /* indicate expanded */
+  }
+
+  .menu-item--cta {
+    order: 999;               /* push cta to bottom on mobile */
+    margin-top: 12px;
+  }
+
+  .menu-item--cta a {
+    justify-content: center;
+  }
+}
+
+/* dummy content to illustrate surrounding context */
+.demo-context {
+  padding: 24px;
+  border-top: 1px dashed #cbd5e1;
+  background: #fbfdff;
+  color: #2d3f54;
+  font-size: 0.95rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.demo-context span {
+  color: #0b6b9b;
+  font-weight: 500;
+}
+
+.breadcrumb-mock {
+  font-size: 0.9rem;
+  background: #eef2f6;
+  padding: 6px 12px;
+  border-radius: 30px;
+  color: #314d67;
+}
+
+/* drupal admin toolbar hint (tiny) */
+.admin-hint {
+  background: #f9fafc;
+  border-left: 3px solid #4592c9;
+  padding: 8px 24px;
+  font-size: 0.85rem;
+  color: #4d6079;
+  border-bottom: 1px solid #dce5ed;
+}
+
+.admin-hint svg {
+  vertical-align: middle;
+  margin-right: 6px;
+  fill: #1a5f8b;
+}
+
+/* focus for accessibility */
+a:focus-visible {
+  outline: 2px solid #2d7eb5;
+  outline-offset: 2px;
+}
