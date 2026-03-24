@@ -253,7 +253,7 @@ if ($route == "+cmodule") {
 
       public static function removeOne(array &\$form, FormStateInterface \$form_state)
       {
-        \$itemKey = "accordions"; //fieldset item key
+        \$itemKey = ""; //fieldset item key
 
         \$trigger = \$form_state->getTriggeringElement();
         \$index = \$trigger["#index"] ?? 0;
@@ -365,7 +365,7 @@ if ($route == "+cmodule") {
                   \$this->blockSubmiteFilterCTR(\$lo, [], \$form, \$form_state);
                 }
               }
-              continue;
+              //continue;
             }
             \$val = \$form_state->getValue(\$k);
             \$this->configuration[\$k] = \$val;
