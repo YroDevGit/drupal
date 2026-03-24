@@ -598,175 +598,10 @@ if ($route == "+cmodule") {
       echo "Failed to create " . $mpath . "/js/" . $filename . ".js";
     }
   }
-
-
-  if ($route == "+ctheme") {
-
-    if (! $filename) {
-      echo "Please add name for a theme";
-      exit;
-    }
-
-    $h = ucfirst($filename);
-    $customPath = "themes/custom/";
-    $tpath = $customPath . $filename;
-
-    if (! is_dir($tpath)) {
-      mkdir($tpath, 0777, true);
-    }
-
-    $arr = [
-      "css" => $tpath . "/css",
-      "js" => $tpath . "/js",
-      "templates" => $tpath . "/templates"
-    ];
-
-    foreach ($arr as $k => $v) {
-      if (! is_dir($v)) {
-        @mkdir($v, 0777, true);
-      }
-    }
-
-    /* info.yml */
-
-    if (! file_exists($tpath . "/" . $filename . ".info.yml")) {
-      $content = <<<EOT
-  name: '$h'
-  type: theme
-  description: 'Custom Drupal Theme'
-  core_version_requirement: ^10
-  base theme: olivero
-
-  libraries:
-    - $filename/global
-
-  regions:
-    header: Header
-    content: Content
-    footer: Footer
-  EOT;
-
-      file_put_contents($tpath . "/" . $filename . ".info.yml", $content);
-    }
-
-
-    /* libraries.yml */
-
-    if (! file_exists($tpath . "/" . $filename . ".libraries.yml")) {
-      $content = <<<EOT
-  global:
-    css:
-      theme:
-        css/style.css: {}
-    js:
-      js/script.js: {}
-  EOT;
-
-      file_put_contents($tpath . "/" . $filename . ".libraries.yml", $content);
-    }
-
-
-    /* page.html.twig */
-
-    if (! file_exists($tpath . "/templates/page.html.twig")) {
-      $content = <<<EOT
-  {{page.header}} <!-- refers to the header region (block layout) -->
-
-  <main class="site-content">
-    {{ page.content }} <!-- refers to content region (block layout) -->
-  </main>
-
-  <footer class="site-footer">
-    <div class="container">
-      <p>© {{ "now"|date("Y") }} {{ site_name }}</p>
-    </div>
-  </footer>
-  EOT;
-
-      file_put_contents($tpath . "/templates/page.html.twig", $content);
-    }
-
-
-    if (! file_exists($tpath . "/templates/block.html.twig")) {
-      $content = <<<EOT
-      {% if logged_in %}
-        <div{{ attributes }}>
-          {{ title_prefix }}
-          {% if label %}
-            <h2{{ title_attributes }}>{{ label }}</h2>
-          {% endif %}
-          {{ title_suffix }}
-          {% block content %}
-            {{ content }}
-          {% endblock %}
-        </div>
-
-      {% else %}
-
-      {{content}}
-
-      {% endif %}
-      EOT;
-
-      file_put_contents($tpath . "/templates/block.html.twig", $content);
-    }
-
-    if (! file_exists($tpath . "/templates/node--contenttype--full.html.twig")) {
-      $content = <<<EOT
-      <!-- content structure for specific content type (like page.html.twig structure) -->
-      EOT;
-
-      file_put_contents($tpath . "/templates/node--contenttype--full.html.twig", $content);
-    }
-
-    /* CSS */
-
-    if (! file_exists($tpath . "/css/style.css")) {
-      $content = <<<EOT
-  /* $filename theme styles */
-
-  body{
-    margin:0;
-    font-family:Arial, Helvetica, sans-serif;
-  }
-
-  .container{
-    max-width:1200px;
-    margin:auto;
-  }
-
-  .site-header{
-    background:#222;
-    color:#fff;
-    padding:20px;
-  }
-
-  .site-footer{
-    background:#111;
-    color:#fff;
-    padding:20px;
-  }
-  EOT;
-
-      file_put_contents($tpath . "/css/style.css", $content);
-    }
-
-
-    /* JS */
-
-    if (! file_exists($tpath . "/js/script.js")) {
-      $content = <<<EOT
-  // $filename theme javascript
-  console.log("$filename theme loaded");
-  EOT;
-
-      file_put_contents($tpath . "/js/script.js", $content);
-    }
-
-    echo "Theme '$filename' created successfully.";
-  }
+  echo "Custom module $h created";
 }
 
+//add Theme
 if ($route == "+ctheme") {
 
   if (! $filename) {
@@ -816,7 +651,6 @@ EOT;
     file_put_contents($tpath . "/" . $filename . ".info.yml", $content);
   }
 
-
   /* libraries.yml */
 
   if (! file_exists($tpath . "/" . $filename . ".libraries.yml")) {
@@ -832,33 +666,84 @@ EOT;
     file_put_contents($tpath . "/" . $filename . ".libraries.yml", $content);
   }
 
-
   /* html.html.twig */
 
   if (! file_exists($tpath . "/templates/html.html.twig")) {
     $content = <<<EOT
-    <!DOCTYPE html>
-    <html{{ html_attributes }}>
-    <head>
-      <head-placeholder token="{{ placeholder_token }}">
-      <title>{{ head_title|safe_join(' | ') }}</title>
-      <css-placeholder token="{{ placeholder_token }}">
-      <js-placeholder token="{{ placeholder_token }}">
+<!DOCTYPE html>
+<html{{ html_attributes }}>
+<head>
+  <head-placeholder token="{{ placeholder_token }}">
+  <title>{{ head_title|safe_join(' | ') }}</title>
+  <css-placeholder token="{{ placeholder_token }}">
+  <js-placeholder token="{{ placeholder_token }}">
+</head>
 
-    </head>
-
-    <body{{ attributes }}>
-      {{ page_top }}
-      {{ page }} <!-- refers to page.html.twig -->
-      {{ page_bottom }}
-      <js-bottom-placeholder token="{{ placeholder_token }}">
-    </body>
-    </html>
-  EOT;
+<body{{ attributes }}>
+  {{ page_top }}
+  {{ page }}
+  {{ page_bottom }}
+  <js-bottom-placeholder token="{{ placeholder_token }}">
+</body>
+</html>
+EOT;
 
     file_put_contents($tpath . "/templates/html.html.twig", $content);
   }
 
+  /* page.html.twig */
+
+  if (! file_exists($tpath . "/templates/page.html.twig")) {
+    $content = <<<EOT
+{{ page.header }}
+
+<main class="site-content">
+  {{ page.content }}
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>© {{ "now"|date("Y") }} {{ site_name }}</p>
+  </div>
+</footer>
+EOT;
+
+    file_put_contents($tpath . "/templates/page.html.twig", $content);
+  }
+
+  /* block.html.twig */
+
+  if (! file_exists($tpath . "/templates/block.html.twig")) {
+
+    $content = <<<EOT
+{% if logged_in %}
+  <div{{ attributes }}>
+    {{ title_prefix }}
+    {% if label %}
+      <h2{{ title_attributes }}>{{ label }}</h2>
+    {% endif %}
+    {{ title_suffix }}
+    {% block content %}
+      {{ content }}
+    {% endblock %}
+  </div>
+{% else %}
+  {{ content }}
+{% endif %}
+EOT;
+
+    file_put_contents($tpath . "/templates/block.html.twig", $content);
+  }
+
+  /* node template */
+
+  if (! file_exists($tpath . "/templates/node--contenttype--full.html.twig")) {
+    $content = <<<EOT
+<!-- content structure for specific content type -->
+EOT;
+
+    file_put_contents($tpath . "/templates/node--contenttype--full.html.twig", $content);
+  }
 
   /* CSS */
 
@@ -892,7 +777,6 @@ EOT;
     file_put_contents($tpath . "/css/style.css", $content);
   }
 
-
   /* JS */
 
   if (! file_exists($tpath . "/js/script.js")) {
@@ -906,3 +790,17 @@ EOT;
 
   echo "Theme '$filename' created successfully.";
 }
+
+
+
+/**
+ *
+ * drush pm:uninstall layout_builder_expose_all_field_blocks -y
+ *
+ * alias drush='/c/xampp/htdocs/themewagon/vendor/bin/drush'
+ *
+ *add this on sites\default\settings.php
+ * $settings['config_sync_directory'] = 'sites/default/files/config_qZSoaSGBeO4PdoE8_oy650MrGj-IGmMYH-JeRYVPhO2bddCRa2cqru9cWOH3sE20O08aJxRc3g/sync';
+* $config['system.logging']['error_level'] = 'verbose';
+ */
+
