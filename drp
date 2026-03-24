@@ -25,6 +25,10 @@ if ($route == "+cmodule") {
   $newname = ucfirst($filename);
   $customPath = "modules/custom/";
 
+  if(! is_dir($customPath)){
+    mkdir($customPath);
+  }
+
   $mpath = $customPath . $filename;
   if (! is_dir($mpath)) {
     mkdir($mpath);
@@ -598,7 +602,7 @@ if ($route == "+cmodule") {
       echo "Failed to create " . $mpath . "/js/" . $filename . ".js";
     }
   }
-  echo "Custom module $h created";
+  echo "✅ Custom module $h created";
 }
 
 //add Theme
@@ -612,6 +616,7 @@ if ($route == "+ctheme") {
   $h = ucfirst($filename);
   $customPath = "themes/custom/";
   $tpath = $customPath . $filename;
+  $ss = strtolower($filename);
 
   if (! is_dir($tpath)) {
     mkdir($tpath, 0777, true);
@@ -637,7 +642,7 @@ name: '$h'
 type: theme
 description: 'Custom Drupal Theme'
 core_version_requirement: ^10
-base theme: olivero
+base theme: false
 
 libraries:
   - $filename/global
@@ -659,6 +664,7 @@ global:
   css:
     theme:
       css/style.css: {}
+      css/special_$ss.css
   js:
     js/script.js: {}
 EOT;
@@ -777,6 +783,113 @@ EOT;
     file_put_contents($tpath . "/css/style.css", $content);
   }
 
+
+  if(! file_exists($tpath . "/css/special_".$ss.".css")){
+    $content = <<<EOT
+    /* Scope all styles to the Layout Builder form */
+    .node-page-layout-builder-form.node-layout-builder-form.layout-builder-form {
+      font-family: Arial, sans-serif; /* optional: consistent font */
+      color: #333;
+      padding: 20px;
+    }
+
+    /* --- Action Buttons --- */
+    .node-page-layout-builder-form .form-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    /* Primary button (Save layout) */
+    .node-page-layout-builder-form .form-actions .button--primary {
+      background-color: #0074bd;
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .node-page-layout-builder-form .form-actions .button--primary:hover {
+      background-color: #005a99;
+    }
+
+    /* Secondary buttons (Discard / Revert) */
+    .node-page-layout-builder-form .form-actions .button:not(.button--primary) {
+      background-color: #f5f5f5;
+      color: #333;
+      border: 1px solid #ccc;
+      padding: 6px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .node-page-layout-builder-form .form-actions .button:not(.button--primary):hover {
+      background-color: #e0e0e0;
+      border-color: #999;
+    }
+
+    /* Align preview checkbox to right */
+    .node-page-layout-builder-form .form-actions #edit-preview-toggle {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* --- Layout Builder Messages --- */
+    .node-page-layout-builder-form .layout-builder__message {
+      background-color: #fff3cd;
+      border: 1px solid #ffeeba;
+      padding: 10px 14px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      color: #856404;
+    }
+
+    /* --- Layout Sections --- */
+    .node-page-layout-builder-form .field--type-layout-section {
+      border: 1px dashed #ccc;
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      background-color: #f9f9f9;
+    }
+
+    /* Optional: make action bar sticky at top */
+    .node-page-layout-builder-form .form-actions.sticky {
+      position: sticky;
+      top: 0;
+      background: #fff;
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+      z-index: 999;
+    }
+
+    /* Optional: style vertical tabs */
+    .node-page-layout-builder-form .vertical-tabs__menu-item {
+      background: #f5f5f5;
+      border: 1px solid #ccc;
+      border-radius: 3px 3px 0 0;
+      margin-right: 2px;
+      padding: 4px 8px;
+      cursor: pointer;
+    }
+
+    .node-page-layout-builder-form .vertical-tabs__menu-item.is-selected {
+      background: #0074bd;
+      color: #fff;
+    }
+    EOT;
+
+    file_put_contents($tpath . "/css/special_".$ss.".css", $content);
+  }
+
   /* JS */
 
   if (! file_exists($tpath . "/js/script.js")) {
@@ -788,7 +901,7 @@ EOT;
     file_put_contents($tpath . "/js/script.js", $content);
   }
 
-  echo "Theme '$filename' created successfully.";
+  echo "✅ Theme '$filename' created successfully.";
 }
 
 
