@@ -38,6 +38,7 @@ if ($route == "+cmodule") {
     "css" => $mpath . "/css",
     "js" => $mpath . "/js",
     "src" => $mpath . "/src/Plugin/Block",
+    "ssrc" =>$mpath . "/src/Controller",
     "templates" => $mpath . "/templates"
   ];
 
@@ -65,6 +66,7 @@ if ($route == "+cmodule") {
     }
   }
 
+  $fjs = $filename."_actions";
   if (! file_exists($mpath . "/" . $filename . ".libraries.yml")) {
     $content = <<<EOT
     $filename-styles:
@@ -74,6 +76,7 @@ if ($route == "+cmodule") {
           css/$filename.css: {}
       js:
         js/$filename.js: {}
+        js/$fjs.js: {}
       dependencies:
         - core/jquery
     EOT;
@@ -253,7 +256,7 @@ if ($route == "+cmodule") {
 
       public static function removeOne(array &\$form, FormStateInterface \$form_state)
       {
-        \$itemKey = ""; //fieldset item key
+        \$itemKey = "accordions"; //fieldset item key
 
         \$trigger = \$form_state->getTriggeringElement();
         \$index = \$trigger["#index"] ?? 0;
@@ -583,6 +586,108 @@ if ($route == "+cmodule") {
     }
   }
 
+  if($extra == "--form"){
+    $cont = $h."Controller";
+    $fid = $ss."_page_id";
+    if(! file_exists($mpath."/".$filename.".routing.yml")){
+      $content = <<<EOT
+      # Page route
+      $ss.form_page:
+        path: '/$ss'
+        defaults:
+          _controller: '\Drupal\\$ss\Controller\\$cont::form'
+          _title: 'Contact Us'
+        requirements:
+          _permission: 'access content'
+
+      # Submit route
+      $ss.submit:
+        path: '/$ss/submit'
+        defaults:
+          _controller: '\Drupal\\$ss\Controller\\$cont::submit'
+        methods: [POST]
+        requirements:
+          _permission: 'access content'
+      EOT;
+      file_put_contents($mpath."/".$filename.".routing.yml", $content);
+    }
+
+    $tblName = $ss."_tbl";
+    if(! file_exists($mpath."/".$filename.".install")){
+      $cnt = $ss."_schema";
+        $content = <<<EOT
+        <?php
+        /**
+        function $cnt() {
+          \$schema['$tblName'] = [
+            'fields' => [
+              'id' => ['type' => 'serial', 'not null' => TRUE],
+              'name' => ['type' => 'varchar', 'length' => 255],
+              'created' => ['type' => 'int'],
+            ],
+            'primary key' => ['id'],
+          ];
+          return \$schema;
+        }
+        */
+        EOT;
+        file_put_contents($mpath."/".$filename.".install", $content);
+    }
+
+    if(! file_exists($mpath."/src/Controller/".$cont.".php")){
+      $content = <<<EOT
+      <?php
+      namespace Drupal\\$ss\Controller;
+
+      use Drupal\Core\Controller\ControllerBase;
+      use Symfony\Component\HttpFoundation\Request;
+      use Symfony\Component\HttpFoundation\JsonResponse;
+      use Drupal\Core\Database\Database;
+      class $cont extends ControllerBase {
+
+        public function form() {
+          return [
+            '#theme' => '$ss',
+            '#attached' => [
+              'library' => ['$ss/$ss-styles'],
+            ],
+            '#form_id' => '$fid',
+          ];
+        }
+
+        public function submit(Request \$request) {
+          /**
+          \$token = \$request->request->get('csrf_token');
+
+          if (!\Drupal::csrfToken()->validate(\$token, '$ss')) {
+            return new JsonResponse(['success' => false, 'message' => 'Invalid CSRF token']);
+          }
+
+          \$name = trim(\$request->request->get('name'));
+          \$email = trim(\$request->request->get('email'));
+          \$message = trim(\$request->request->get('message'));
+
+          if (!\$name || !\$email || !\$message) {
+            return new JsonResponse(['success' => false, 'message' => 'All fields are required']);
+          }
+
+          Database::getConnection()->insert('$tblName')
+            ->fields([
+              'name' => \$name,
+              'email' => \$email,
+              'message' => \$message,
+              'created' => \Drupal::time()->getCurrentTime(),
+            ])->execute();
+
+          return new JsonResponse(['success' => true, 'message' => 'Message saved successfully!']);
+          */
+        }
+      }
+      EOT;
+      file_put_contents($mpath."/src/Controller/".$cont.".php", $content);
+    }
+  }
+
   if (! file_exists($mpath . "/css/" . $filename . ".css")) {
     $content = <<<EOT
     /* $filename css */
@@ -600,6 +705,47 @@ if ($route == "+cmodule") {
 
     if (! file_put_contents($mpath . "/js/" . $filename . ".js", $content)) {
       echo "Failed to create " . $mpath . "/js/" . $filename . ".js";
+    }
+  }
+
+  $formId = $ss."_form_id";
+  if (! file_exists($mpath . "/js/" . $fjs . ".js")) {
+    $content = <<<EOT
+    // $filename javascript
+    (function (Drupal, once) {
+      Drupal.behaviors.contactForm = {
+        attach: function (context) {
+          const forms = once('contactForm', context.querySelectorAll('form[id^="$formId"]'));
+
+          forms.forEach(form => {
+            form.addEventListener('submit', function (e) {
+              e.preventDefault();
+              const data = new FormData(form);
+
+              fetch('/$ss/submit', {
+                method: 'POST',
+                body: data,
+                credentials: 'same-origin'
+              })
+              .then(res => res.json())
+              .then(res => {
+                const el = form.nextElementSibling; // #response div
+                if (res.success) {
+                  //Add action if access
+                  form.reset();
+                } else {
+                 //Add action when failed
+                }
+              });
+            });
+          });
+        }
+      };
+    })(Drupal, once);
+    EOT;
+
+    if (! file_put_contents($mpath . "/js/" . $fjs . ".js", $content)) {
+      echo "Failed to create " . $mpath . "/js/" . $fjs . ".js";
     }
   }
   echo "✅ Custom module $h created";
@@ -907,6 +1053,8 @@ EOT;
 
 
 /**
+ *
+ * <input type="hidden" name="csrf_token" value="{{ drupal_csrf_token('contact_us') }}">
  *
  * drush pm:uninstall layout_builder_expose_all_field_blocks -y
  *
