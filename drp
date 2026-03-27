@@ -79,6 +79,8 @@ if ($route == "+cmodule") {
         js/$fjs.js: {}
       dependencies:
         - core/jquery
+        - core/drupal
+        - core/once
     EOT;
 
     if (! file_put_contents($mpath . "/" . $filename . ".libraries.yml", $content)) {
@@ -313,8 +315,8 @@ if ($route == "+cmodule") {
           if (!empty(\$item[\$childKey])) {
             \$file = \Drupal\\file\Entity\File::load(\$item[\$childKey][0]);
             if (\$file) {
-              \$file->setPermanent();
-              \$file->save();
+              \$file->setPermanent(); //remove this of no need to upload
+              \$file->save(); //remove this of no need to upload
               \$item[\$childKey] = [
                 'image_fid' => \$file->id(),
                 'image_url' => \Drupal::service('file_url_generator')->generateAbsoluteString(\$file->getFileUri())
@@ -423,6 +425,17 @@ if ($route == "+cmodule") {
             continue;
           }
           if (isset(\$v['type']) && (\$v['type'] == "manage_file" || \$v['type'] == "file")) {
+            if(isset(\$v['picker']) && (\$v['picker'] == "media" || \$v['picker'] == "media_library")){
+              \$form[\$k] = [
+                '#type' => 'media_library',
+                '#allowed_bundles' => \$v['allowed'] ?? ['image'], // Restrict to image media types
+                '#title' => \$this->t(\$v['label'] ?? \$k),
+                '#description' => t('Upload a new image or choose an existing one from the library.'),
+                '#cardinality' => 1,
+                '#default_value' => \$conf ?? [],
+              ];
+              continue;
+            }
             \$form[\$k] = [
               '#type' => 'managed_file',
               '#title' => \$this->t(\$v['label'] ?? \$k),
@@ -516,7 +529,7 @@ if ($route == "+cmodule") {
                   if (isset(\$items[\$ikey]['id'])) {
                     \$child['#attributes']["#" . \$items[\$ikey]['id']] = \$i;
                   }
-                } else if (isset(\$child['#type']) && (\$child['#type'] == 'file' || \$child['#type'] == 'managed_file')) {
+                } else if (isset(\$child['#type']) && (\$child['#type'] == 'file' || \$child['#type'] == 'managed_file' || \$child['#type'] == "media_library")) {
                   if (isset(\$atinIto[\$ikey]) && ! is_array(\$atinIto[\$ikey])) {
                     \$atinIto[\$ikey] = [];
                   }
@@ -533,10 +546,29 @@ if ($route == "+cmodule") {
             continue;
           }
 
+          \$value = "";
+          \$vl = \$this->configuration[\$k] ?? "";
+          if(isset(\$v['trim'])){
+            \$trm = \$v['trim'];
+            if(is_bool(\$trm)){
+              if(\$trm == false){
+                \$value = \$vl;
+              }else{
+                if(\$trm == true){
+                  \$value = trim(\$vl);
+                }
+              }
+            }else if(is_string(\$trm)){
+              \$value = trim(\$vl, \$trm);
+            }
+          }else{
+            \$value = trim(\$vl);
+          }
+
           \$form[\$k] = [
             '#type' => \$v['type'] ?? "textfield",
             '#title' => \$this->t(\$v['label'] ?? ucfirst(\$k)),
-            '#default_value' => \$this->configuration[\$k] ?? "",
+            '#default_value' => \$value,
           ];
         }
         return \$form;
@@ -548,9 +580,13 @@ if ($route == "+cmodule") {
        */
       public function build()
       {
+        \$token = \Drupal::csrfToken()->get('$ss');
+        \$_SESSION['csrf_token'] = \$token;
         \$data = \$this->data();
+
         \$ret =  [
           '#theme' => '$filename',
+          '#csrf_token' => \$token,
           '#attached' => [
             'library' => [
               '$filename/$filename-styles',
@@ -612,7 +648,7 @@ if ($route == "+cmodule") {
       file_put_contents($mpath."/".$filename.".routing.yml", $content);
     }
 
-    $tblName = $ss."_tbl";
+    $tblName = "tbl_".$ss;
     if(! file_exists($mpath."/".$filename.".install")){
       $cnt = $ss."_schema";
         $content = <<<EOT
@@ -622,7 +658,7 @@ if ($route == "+cmodule") {
           \$schema['$tblName'] = [
             'fields' => [
               'id' => ['type' => 'serial', 'not null' => TRUE],
-              'name' => ['type' => 'varchar', 'length' => 255],
+              'name' => ['type' => 'varchar', 'length' => 255, 'not null' => FALSE],
               'created' => ['type' => 'int'],
             ],
             'primary key' => ['id'],
@@ -646,12 +682,16 @@ if ($route == "+cmodule") {
       class $cont extends ControllerBase {
 
         public function form() {
+          \$token = \Drupal::csrfToken()->get('$ss');
+          \$_SESSION['csrf_token'] = \$token;
+
           return [
             '#theme' => '$ss',
             '#attached' => [
               'library' => ['$ss/$ss-styles'],
             ],
-            '#form_id' => '$fid',
+            '#form_id' => '$fid', //add this to your $ss.module file
+            '#csrf_token' => \$token, //add this to your $ss.module file
           ];
         }
 
@@ -710,19 +750,20 @@ if ($route == "+cmodule") {
 
   $formId = $ss."_form_id";
   if (! file_exists($mpath . "/js/" . $fjs . ".js")) {
+    $fform = $h."Form";
     $content = <<<EOT
     // $filename javascript
     (function (Drupal, once) {
-      Drupal.behaviors.contactForm = {
+      Drupal.behaviors.$fform = {
         attach: function (context) {
-          const forms = once('contactForm', context.querySelectorAll('form[id^="$formId"]'));
+          const forms = once('$fform', context.querySelectorAll('form[id^="$formId"]'));
 
           forms.forEach(form => {
             form.addEventListener('submit', function (e) {
               e.preventDefault();
               const data = new FormData(form);
 
-              fetch('/$ss/submit', {
+              fetch(drupalSettings.path.baseUrl+'$ss/submit', {
                 method: 'POST',
                 body: data,
                 credentials: 'same-origin'
@@ -1053,6 +1094,10 @@ EOT;
 
 
 /**
+ *
+ * drupalSettings.path.baseUrl
+ *
+ * composer require drupal/media_library_form_element
  *
  * <input type="hidden" name="csrf_token" value="{{ drupal_csrf_token('contact_us') }}">
  *
