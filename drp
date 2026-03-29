@@ -310,10 +310,32 @@ if ($route == "+cmodule") {
         \$parentKey = ""; //parent key
         \$childKey = "img"; //child key
 
-        \$items = \$form_state->getValue(\$parentKey); //parent key
+        \$item = \$form_state->getValue(\$parentKey); //parent key
+
+        for media library:
+
+        if(\$item){
+          \$exp = explode(",",\$item);
+          \$exp = array_reverse(\$exp);
+          \$id = \$exp[0];
+
+          \$file = \Drupal\media\Entity\Media::load(\$id);
+          \$fl = \$file->get('field_media_image')->entity;
+          if(\$file && \$fl){
+            \$this->configuration[\$parentKey] = [
+                'image_fid' =>\$file->id(),
+                'image_url' => \Drupal::service('file_url_generator')
+                  ->generateAbsoluteString(\$fl->getFileUri()),
+              ];
+          }
+        }
+
+        for raw file_managed:
+
+        \$items = \$form_state->getValue(\$parentKey);
         foreach (\$items as \$delta => &\$item) {
           if (!empty(\$item[\$childKey])) {
-            \$file = \Drupal\\file\Entity\File::load(\$item[\$childKey][0]);
+            \$file = \Drupal\file\Entity\File::load(\$item[\$childKey][0]);
             if (\$file) {
               \$file->setPermanent(); //remove this of no need to upload
               \$file->save(); //remove this of no need to upload
@@ -851,7 +873,7 @@ global:
   css:
     theme:
       css/style.css: {}
-      css/special_$ss.css
+      css/special_$ss.css : {}
   js:
     js/script.js: {}
 EOT;
@@ -1104,6 +1126,8 @@ EOT;
  * drush pm:uninstall layout_builder_expose_all_field_blocks -y
  *
  * alias drush='/c/xampp/htdocs/themewagon/vendor/bin/drush'
+ *
+ * drupal ecommers: composer.json set "minimum-stability": "dev", composer require drupal/commerce
  *
  *add this on sites\default\settings.php
  * $settings['config_sync_directory'] = 'sites/default/files/config_qZSoaSGBeO4PdoE8_oy650MrGj-IGmMYH-JeRYVPhO2bddCRa2cqru9cWOH3sE20O08aJxRc3g/sync';
