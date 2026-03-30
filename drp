@@ -682,7 +682,6 @@ EOT;
         'name' => \$site_config->get('name'),
         'slogan' => \$site_config->get('slogan'),
         'mail' => \$site_config->get('mail'),
-        'front' => \Drupal::url('<front>'),
       ];
     }
 EOT;
