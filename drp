@@ -671,10 +671,11 @@ EOT;
 
 
   if (! file_exists($tpath . "/" . $filename . ".theme")) {
+    $funcname = $ss."_preprocess";
     $content = <<<EOT
     <?php
 
-    function main_preprocess(&\$variables) {
+    function $funcname(&\$variables) {
       \$site_config = \Drupal::config('system.site');
 
       \$variables['site'] = [
