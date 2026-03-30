@@ -306,31 +306,20 @@ if ($route == "+cmodule") {
 
 
         // optional when there is an image
+        //for media library:
         /**
         \$parentKey = ""; //parent key
-        \$childKey = "img"; //child key
-
         \$item = \$form_state->getValue(\$parentKey); //parent key
-
-        for media library:
-
-        if(\$item){
-          \$exp = explode(",",\$item);
-          \$exp = array_reverse(\$exp);
-          \$id = \$exp[0];
-
-          \$file = \Drupal\media\Entity\Media::load(\$id);
-          \$fl = \$file->get('field_media_image')->entity;
-          if(\$file && \$fl){
-            \$this->configuration[\$parentKey] = [
-                'image_fid' =>\$file->id(),
-                'image_url' => \Drupal::service('file_url_generator')
-                  ->generateAbsoluteString(\$fl->getFileUri()),
-              ];
-          }
+        \$res = \Ctrx\DrupalMedia::getFileDetails(\$item);
+        if(\$res){
+          \$this->configuration[\$parentKey] = \$res;
         }
+        **/
 
-        for raw file_managed:
+        //for raw file_managed:
+        /**
+        \$parentKey = ""; //parent key
+        \$childKey = ""; //child key
 
         \$items = \$form_state->getValue(\$parentKey);
         foreach (\$items as \$delta => &\$item) {
@@ -408,191 +397,7 @@ if ($route == "+cmodule") {
       {
         \$data = \$this->data();
         \$form = [];
-        \$form = \$this->filterBlockFormCtr(\$data, \$form_state);
-        return \$form;
-      }
-
-      /**
-       * {@inheritdoc}
-       * This is a core function, modifying it can cause errors
-       */
-      public function filterBlockFormCtr(\$data, FormStateInterface \$form_state, string|int \$parent = null, \$counter = -1)
-      {
-        \$form = [];
-        foreach (\$data as \$k => \$v) {
-          \$conf = [];
-          if (\$parent) {
-            //\$conf = \$this->configuration[\$parent] ?? null;
-          } else {
-            \$conf = \$this->configuration[\$k] ?? null;
-          }
-          if (isset(\$v['type']) && \$v['type'] == "checkbox") {
-            \$label = \$this->t(\$v['label'] ?? ucfirst(\$k));
-            \$form[\$k] = [
-              '#type' => "checkbox",
-              '#title' => \$label,
-              '#default_value' => \$conf ?? 0,
-            ];
-            continue;
-          }
-          if (isset(\$v['type']) && \$v['type'] == "select") {
-            \$label = \$this->t(\$v['label'] ?? ucfirst(\$k));
-            \$name = \$v['name'] ?? \$label;
-            \$form[\$k] = [
-              '#type' => "select",
-              '#title' => \$this->t(\$v['label'] ?? ucfirst(\$k)),
-              '#options' => \$v['options'] ?? ["0" => "Select " . \$name],
-              '#default_value' => \$conf ?? "0",
-            ];
-            continue;
-          }
-          if (isset(\$v['type']) && (\$v['type'] == "manage_file" || \$v['type'] == "file")) {
-            if(isset(\$v['picker']) && (\$v['picker'] == "media" || \$v['picker'] == "media_library")){
-              \$form[\$k] = [
-                '#type' => 'media_library',
-                '#allowed_bundles' => \$v['allowed'] ?? ['image'], // Restrict to image media types
-                '#title' => \$this->t(\$v['label'] ?? \$k),
-                '#description' => t('Upload a new image or choose an existing one from the library.'),
-                '#cardinality' => 1,
-                '#default_value' => \$conf ?? [],
-              ];
-              continue;
-            }
-            \$form[\$k] = [
-              '#type' => 'managed_file',
-              '#title' => \$this->t(\$v['label'] ?? \$k),
-              '#upload_location' => 'public://$ss/',
-              '#default_value' => \$conf ?? [],
-            ];
-            if (isset(\$v['validator'])) {
-              \$form[\$k]["#upload_validators"] = \$v['validator'];
-              //'file_validate_extensions' => ['png jpg jpeg gif'],
-              //'file_validate_image_resolution' => ['50x50', '2000x2000'], // optional
-            }
-            continue;
-          }
-          if (isset(\$v['type']) && \$v['type'] == "submit") {
-            \$form[\$k] = [
-              '#type' => 'submit',
-              '#value' => \$this->t(\$v['label'] ?? "Submit"),
-            ];
-
-            if (isset(\$v['id'])) {
-              \$form[\$k]["#" . \$v['id']] = \$counter;
-            }
-
-            if (isset(\$v['ajax'])) {
-              if (is_string(\$v['ajax']['callback'])) {
-                \$form[\$k]["#ajax"]['callback'] = [get_class(\$this), \$v['ajax']['callback']];
-                \$form[\$k]["#ajax"]['wrapper'] = \$v['ajax']['wrapper'];
-              } else {
-                \$form[\$k]["#ajax"] = \$v['ajax'];
-              }
-            }
-
-            if (isset(\$v['action']) || isset(\$v['callback'])) {
-              \$form[\$k]['#submit'] = [
-                [get_class(\$this), \$v['action'] ?? \$v['callback']]
-              ];
-            }
-            continue;
-          }
-
-          if (isset(\$v['type']) && \$v['type'] == "fieldset") {
-            \$items = \$v['items'] ?? [];
-
-            \$triggerBtn = true;
-            \$akinIto = \$form_state->get(\$k);
-
-            \$form_state->set(\$k, \$form_state->get(\$k) ?? \$this->configuration[\$k] ?? []);
-
-            if (\$akinIto === NULL) {
-              \$triggerBtn = false;
-              \$akinIto = \$form_state->get(\$k);
-            }
-            \$akinIto = array_values(\$akinIto);
-
-            \$num_items = 0;
-            if (\$form_state->get(\$k)) {
-              \$num_items = count(\$akinIto);
-            } else {
-              \$num_items = count(\$akinIto);
-            }
-
-            \$wrap = \$k . "-" . "wrapper";
-            if (isset(\$v['wrapper'])) {
-              \$wrap =  \$v['wrapper'];
-            }
-            \$form[\$k] = [
-              '#type' => 'fieldset',
-              '#title' => \$this->t(\$v['label'] ?? ucfirst(\$k)),
-              '#tree' => TRUE,
-              '#prefix' => "<div id='\$wrap'>",
-              '#suffix' => '</div>',
-            ];
-
-            \$children = \$this->filterBlockFormCtr(\$items, \$form_state, \$k);
-
-            for (\$i = 0; \$i < \$num_items; \$i++) {
-              \$atinIto = \$akinIto[\$i] ?? [];
-              foreach (\$children as \$ikey => \$child) {
-                if (! isset(\$v['autoload']) || \$v['autoload'] == false) {
-                  if (! isset(\$atinIto[\$ikey])) continue;
-                }
-                \$form[\$k][\$i]['divider'] = [
-                  '#markup' => '<hr style="margin:10px 0;">',
-                ];
-
-                if (isset(\$child['#type']) && \$child['#type'] == 'submit') {
-                  \$child['#limit_validation_errors'] = [];
-                  \$child['#attributes']['data-index'] = \$i;
-                  \$child["#name"] = \$i + 1;
-                  \$child["#index"] = \$i;
-                  if (isset(\$items[\$ikey]['id'])) {
-                    \$child['#attributes']["#" . \$items[\$ikey]['id']] = \$i;
-                  }
-                } else if (isset(\$child['#type']) && (\$child['#type'] == 'file' || \$child['#type'] == 'managed_file' || \$child['#type'] == "media_library")) {
-                  if (isset(\$atinIto[\$ikey]) && ! is_array(\$atinIto[\$ikey])) {
-                    \$atinIto[\$ikey] = [];
-                  }
-                  \$child['#default_value'] =  \$atinIto[\$ikey] ?? [];
-                } else if (isset(\$child['#type']) && \$child['#type'] == "checkbox") {
-                  \$child['#default_value'] = \$atinIto[\$ikey] ?? 0;
-                } else {
-                  \$child['#default_value'] = \$atinIto[\$ikey] ?? "";
-                }
-                //dump(\$child);
-                \$form[\$k][\$i][\$ikey] = \$child;
-              }
-            }
-            continue;
-          }
-
-          \$value = "";
-          \$vl = \$this->configuration[\$k] ?? "";
-          if(isset(\$v['trim'])){
-            \$trm = \$v['trim'];
-            if(is_bool(\$trm)){
-              if(\$trm == false){
-                \$value = \$vl;
-              }else{
-                if(\$trm == true){
-                  \$value = trim(\$vl);
-                }
-              }
-            }else if(is_string(\$trm)){
-              \$value = trim(\$vl, \$trm);
-            }
-          }else{
-            \$value = trim(\$vl);
-          }
-
-          \$form[\$k] = [
-            '#type' => \$v['type'] ?? "textfield",
-            '#title' => \$this->t(\$v['label'] ?? ucfirst(\$k)),
-            '#default_value' => \$value,
-          ];
-        }
+        \$form = \Ctrx\DrupalForm::filterBlockFormCtr(\$data, \$form_state, null, -1, \$this->configuration);
         return \$form;
       }
 
@@ -1116,10 +921,10 @@ EOT;
 
 
 /**
+ * composer require ctrx/drupal-helper
+ * composer require drupal/media_library_form_element
  *
  * drupalSettings.path.baseUrl
- *
- * composer require drupal/media_library_form_element
  *
  * <input type="hidden" name="csrf_token" value="{{ drupal_csrf_token('contact_us') }}">
  *
