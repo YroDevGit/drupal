@@ -50,10 +50,11 @@ if ($route == "+cmodule") {
 
   $h = ucfirst($filename);
   $ss = strtolower($filename);
+  $spacer = str_replace("_", " ", $h);
 
   if (! file_exists($mpath . "/" . $filename . ".info.yml")) {
     $content = <<<EOT
-    name: '$h'
+    name: '$spacer'
     type: module
     description: 'Please edit this description'
     core_version_requirement: ^10
@@ -140,7 +141,8 @@ if ($route == "+cmodule") {
      *
      * @Block(
      *   id = "$fblock",
-     *   admin_label = @Translation("$h Block"),
+     *   admin_label = @Translation("$spacer Block"),
+     *   category = @Translation("Custom Modules")
      * )
      */
     class $bn extends BlockBase {
@@ -211,8 +213,8 @@ if ($route == "+cmodule") {
      *
      * @Block(
      *   id = "$fblock",
-     *   admin_label = @Translation("$h Block"),
-     *   category = @Translation("Customs")
+     *   admin_label = @Translation("$spacer Block"),
+     *   category = @Translation("Custom Modules")
      * )
      */
     class $bn extends BlockBase {
@@ -290,53 +292,22 @@ if ($route == "+cmodule") {
         return \$complete_form;
       }
 
-
-      //Below are the core methods, do not modify.
+      /**
+       * {@inheritdoc}
+       */
+      public function newVariables(){
+        return [];
+      }
 
       /**
        * {@inheritdoc}
-       * This is a core function, modifying it can cause errors
        */
       public function blockSubmit(\$form, FormStateInterface \$form_state)
       {
         \$except = []; //keys that has custom process below
 
         \$data = \$this->data();
-        \$this->blockSubmiteFilterCTR(\$data, \$except, \$form, \$form_state);
-
-
-        // optional when there is an image
-        //for media library:
-        /**
-        \$parentKey = ""; //parent key
-        \$item = \$form_state->getValue(\$parentKey); //parent key
-        \$res = \Ctrx\DrupalMedia::getFileDetails(\$item);
-        if(\$res){
-          \$this->configuration[\$parentKey] = \$res;
-        }
-        **/
-
-        //for raw file_managed:
-        /**
-        \$parentKey = ""; //parent key
-        \$childKey = ""; //child key
-
-        \$items = \$form_state->getValue(\$parentKey);
-        foreach (\$items as \$delta => &\$item) {
-          if (!empty(\$item[\$childKey])) {
-            \$file = \Drupal\file\Entity\File::load(\$item[\$childKey][0]);
-            if (\$file) {
-              \$file->setPermanent(); //remove this of no need to upload
-              \$file->save(); //remove this of no need to upload
-              \$item[\$childKey] = [
-                'image_fid' => \$file->id(),
-                'image_url' => \Drupal::service('file_url_generator')->generateAbsoluteString(\$file->getFileUri())
-              ];
-            }
-          }
-        }
-        \$this->configuration[\$parentKey] = \$items;
-        */
+        \Ctrx\DrupalHelper::blockSubmiteFilterCTR(\$data, \$except, \$form, \$form_state, \$this->configuration);
       }
 
       /**
@@ -366,24 +337,33 @@ if ($route == "+cmodule") {
 
       /**
        * {@inheritdoc}
-       * This is a core function, modifying it can cause errors
        */
-      public function blockSubmiteFilterCTR(\$data, \$except, \$form, \$form_state){
+      public function blockSubmiteFilterCTR(\$data, \$except, \$form, \$form_state)
+      {
         foreach (\$data as \$k => \$v) {
-          if(in_array(\$v, \$except)) continue;
-          if(isset(\$v['type'])){
-            if(\$v['type'] == "submit") continue;
-            if(\$v['type'] == "markup" || \$v['type'] == "html") continue;
-            if(\$v['type'] == "fieldset"){
+          if (in_array(\$v, \$except)) continue;
+          if (isset(\$v['type'])) {
+            if (\$v['type'] == "submit") continue;
+            if (\$v['type'] == "markup" || \$v['type'] == "html") continue;
+            if (\$v['type'] == "fieldset") {
               \$items = \$v['items'];
-              if(! empty(\$items)){
-                foreach(\$items as \$ko => \$lo){
+              if (! empty(\$items)) {
+                foreach (\$items as \$ko => \$lo) {
                   \$this->blockSubmiteFilterCTR(\$lo, [], \$form, \$form_state);
                 }
               }
-              //continue;
             }
             \$val = \$form_state->getValue(\$k);
+            if(\$v['type'] == "auto" || \$v['type'] == "auto_complete"){
+              \$node = \Drupal\\node\Entity\Node::load(\$val);
+              if(\$node){
+                \$url = \$node->toUrl()->toString();
+                \$val = [
+                  "page_id" => \$val,
+                  "url" => \$url
+                ];
+              }
+            }
             \$this->configuration[\$k] = \$val;
           }
         }
@@ -397,7 +377,7 @@ if ($route == "+cmodule") {
       {
         \$data = \$this->data();
         \$form = [];
-        \$form = \Ctrx\DrupalForm::filterBlockFormCtr(\$data, \$form_state, null, -1, \$this->configuration);
+        \$form = \Ctrx\DrupalForm::filterBlockFormCtr(\$data, \$form_state, null, -1, \$this->configuration, \$this);
         return \$form;
       }
 
@@ -435,6 +415,8 @@ if ($route == "+cmodule") {
             \$ret["#" . \$key] = \$krg;
           }
         }
+        \$newVar = \$this->newVariables();
+        \$ret = [...\$ret, ...\$newVar];
         return \$ret;
       }
     }
@@ -650,9 +632,10 @@ if ($route == "+ctheme") {
 
   /* info.yml */
 
+  $spacer = str_replace("_", " ", $h);
   if (! file_exists($tpath . "/" . $filename . ".info.yml")) {
     $content = <<<EOT
-name: '$h'
+name: '$spacer'
 type: theme
 description: 'Custom Drupal Theme'
 core_version_requirement: ^10
@@ -684,6 +667,26 @@ global:
 EOT;
 
     file_put_contents($tpath . "/" . $filename . ".libraries.yml", $content);
+  }
+
+
+  if (! file_exists($tpath . "/" . $filename . ".theme")) {
+    $content = <<<EOT
+    <?php
+
+    function main_preprocess(&\$variables) {
+      \$site_config = \Drupal::config('system.site');
+
+      \$variables['site'] = [
+        'name' => \$site_config->get('name'),
+        'slogan' => \$site_config->get('slogan'),
+        'mail' => \$site_config->get('mail'),
+        'front' => \Drupal::url('<front>'),
+      ];
+    }
+EOT;
+
+    file_put_contents($tpath . "/" . $filename . ".theme", $content);
   }
 
   /* html.html.twig */
